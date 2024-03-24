@@ -1,11 +1,9 @@
 - hosts: localhost
-  collections:
-    - community.general
   connection: local
   vars_files:
     - default.config.yml
   roles:
     - ubuntu_common
-    - k3s
     - qemu
+    - k3s
     - nfs_client

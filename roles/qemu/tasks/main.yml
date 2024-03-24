@@ -1,10 +1,10 @@
-# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html
 - name: basic packages
   apt:
+    update_cache: yes
+    cache_valid_time: 3600
     pkg:
       - qemu-guest-agent
 
-# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/systemd_service_module.html#ansible-collections-ansible-builtin-systemd-service-module
 - name: Enable qemu daemon
   systemd:
     name: qemu-guest-agent
