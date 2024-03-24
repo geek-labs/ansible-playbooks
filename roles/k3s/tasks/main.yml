@@ -1,12 +1,12 @@
 # uninstall firewall
-- name: remote ufw firewall
+- name: Remote ufw firewall
   apt:
     name: ufw
     state: absent
     purge: true
 
 ## fix ulimit for k8s
-- name: multipathd config
+- name: <ultipathd config
   copy:
     mode: '0644'
     dest: '/etc/security/limits.d/k8s.conf'
@@ -21,7 +21,7 @@
       root hard     nofile         65535
 
 ## fix multipathd
-- name: multipathd config
+- name: Multipathd config
   copy:
     mode: '0644'
     dest: '/etc/multipath.conf'
