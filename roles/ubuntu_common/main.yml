@@ -1,0 +1,44 @@
+- name: apt update
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+    pkg:
+      - zsh
+      - unattended-upgrades
+
+## unattended upgrades
+- name: configre unattended-upgrades
+  shell: dpkg-reconfigure -f noninteractive unattended-upgrades
+  become: yes
+
+- name: enable unattended-upgrades
+  shell: echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | debconf-set-selections
+  become: yes
+
+- name: unattended-upgrades autoupgrades
+  copy:
+    mode: '0644'
+    dest: '/etc/apt/apt.conf.d/50unattended-upgrades'
+    content: |
+      Unattended-Upgrade::Allowed-Origins {
+        "${distro_id}:${distro_codename}";
+        "${distro_id}:${distro_codename}-security";
+        "${distro_id}ESMApps:${distro_codename}-apps-security";
+        "${distro_id}ESM:${distro_codename}-infra-security";
+        "${distro_id}:${distro_codename}-updates";
+      };
+
+      Unattended-Upgrade::Package-Blacklist {
+      };
+
+      Unattended-Upgrade::DevRelease "auto";
+
+- name: unattended-upgrades autoupgrades
+  copy:
+    mode: '0644'
+    dest: '/etc/apt/apt.conf.d/20auto-upgrades'
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Download-Upgradeable-Packages "1";
+      APT::Periodic::AutocleanInterval "7";
+      APT::Periodic::Unattended-Upgrade "1";

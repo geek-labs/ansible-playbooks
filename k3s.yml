@@ -1,0 +1,5 @@
+- hosts: localhost
+  roles:
+    - ubuntu_common
+    - k3s
+    - qemu

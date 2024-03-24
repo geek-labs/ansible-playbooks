@@ -1,0 +1,78 @@
+# uninstall firewall
+- name: remote ufw firewall
+  apt:
+    name: ufw
+    state: absent
+    purge: true
+
+## fix ulimit for k8s
+- name: multipathd config
+  copy:
+    mode: '0644'
+    dest: '/etc/security/limits.d/k8s.conf'
+    content: |
+      * soft     nproc          65535    
+      * hard     nproc          65535   
+      * soft     nofile         65535   
+      * hard     nofile         65535
+      root soft     nproc          65535    
+      root hard     nproc          65535   
+      root soft     nofile         65535   
+      root hard     nofile         65535
+
+## fix multipathd
+- name: multipathd config
+  copy:
+    mode: '0644'
+    dest: '/etc/multipath.conf'
+    content: |
+      defaults {
+        user_friendly_names yes
+      }
+
+      blacklist {
+          devnode "^sd[a-z0-9]+"
+      }
+
+- name: Fix multipathd
+  systemd_service:
+    name: multipathd
+    enabled: true
+    state: restarted
+
+## install k3s
+- name: Install k3s
+  shell: curl -fL https://get.k3s.io | INSTALL_K3S_VERSION="v1.29.2+k3s1" K3S_KUBECONFIG_MODE="640" INSTALL_K3S_EXEC="server --cluster-cidr=${cluster_cidr} --disable-network-policy --flannel-backend=none --disable traefik --disable local-storage --disable metrics-server" sh -
+  become: yes
+
+- name: allow sudoer access to k3s config
+  file:
+    path: /etc/rancher/k3s/k3s.yaml
+    owner: root
+    group: sudo
+
+## shutdown helper
+- name: k3s shutdown helper
+  copy:
+    mode: '0644'
+    dest: '/etc/systemd/system/k3s-shutdown.service'
+    content: |
+      [Unit]
+      Description=Gracefully shutdown k3s workload
+      DefaultDependencies=no
+      Before=shutdown.target
+
+      [Service]
+      Type=oneshot
+      ExecStart=/usr/local/bin/k3s-killall.sh
+      TimeoutStartSec=0
+
+      [Install]
+      WantedBy=shutdown.target
+
+- name: Start k3s shutdown helper
+  systemd_service:
+    name: k3s-shutdown.service
+    enabled: true
+    daemon_reload: true
+    state: started
