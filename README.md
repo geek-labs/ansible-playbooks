@@ -2,9 +2,13 @@
 
 Different ansible playbooks mainly for homelabs. Most of them are debian/ubuntu based, do not try on other distros.
 
-# Docs
+# Ansible Docs
 
+## General
 - [directory layout](https://docs.ansible.com/ansible/2.8/user_guide/playbooks_best_practices.html#directory-layout)
+
+## Tasks
+
 - [apt](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html) 
 - [systemd](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/systemd_service_module.html) 
 - [shell](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/shell_module.html)
