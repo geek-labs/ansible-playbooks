@@ -35,7 +35,7 @@
       }
 
 - name: Fix multipathd
-  systemd_service:
+  ansible.builtin.systemd_service:
     name: multipathd
     enabled: true
     state: restarted
@@ -70,7 +70,7 @@
       WantedBy=shutdown.target
 
 - name: Start k3s shutdown helper
-  systemd_service:
+  ansible.builtin.systemd_service:
     name: k3s-shutdown.service
     enabled: true
     daemon_reload: true
