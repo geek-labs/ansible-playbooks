@@ -1,5 +1,9 @@
 - hosts: localhost
+  connection: local
+  vars_files:
+    - default.config.yml
   roles:
     - ubuntu_common
     - k3s
     - qemu
+    - nfs_client
