@@ -1,4 +1,4 @@
 - name: nfs client
   apt:
     pkg:
-      - nfs_common
+      - nfs-common
