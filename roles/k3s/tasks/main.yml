@@ -6,33 +6,18 @@
     purge: true
 
 ## fix ulimit for k8s
-- name: <ultipathd config
+- name: limits
   copy:
-    mode: '0644'
+    src: files/limits_k8s.conf
     dest: '/etc/security/limits.d/k8s.conf'
-    content: |
-      * soft     nproc          65535    
-      * hard     nproc          65535   
-      * soft     nofile         65535   
-      * hard     nofile         65535
-      root soft     nproc          65535    
-      root hard     nproc          65535   
-      root soft     nofile         65535   
-      root hard     nofile         65535
+    mode: '0644'
 
 ## fix multipathd
 - name: Multipathd config
   copy:
-    mode: '0644'
+    src: files/multipath.conf
     dest: '/etc/multipath.conf'
-    content: |
-      defaults {
-        user_friendly_names yes
-      }
-
-      blacklist {
-          devnode "^sd[a-z0-9]+"
-      }
+    mode: '0644'
 
 - name: Fix multipathd
   systemd_service:
@@ -53,21 +38,9 @@
 ## shutdown helper
 - name: k3s shutdown helper
   copy:
-    mode: '0644'
+    src: 'files/k3s-shutdown.service'
     dest: '/etc/systemd/system/k3s-shutdown.service'
-    content: |
-      [Unit]
-      Description=Gracefully shutdown k3s workload
-      DefaultDependencies=no
-      Before=shutdown.target
-
-      [Service]
-      Type=oneshot
-      ExecStart=/usr/local/bin/k3s-killall.sh
-      TimeoutStartSec=0
-
-      [Install]
-      WantedBy=shutdown.target
+    mode: '0644'
 
 - name: Start k3s shutdown helper
   systemd_service:
