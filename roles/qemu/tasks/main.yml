@@ -6,7 +6,7 @@
 
 # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/systemd_service_module.html#ansible-collections-ansible-builtin-systemd-service-module
 - name: Enable qemu daemon
-  systemd_service:
+  systemd:
     name: qemu-guest-agent
     enabled: true
     state: started
