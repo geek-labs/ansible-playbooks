@@ -5,6 +5,8 @@
     pkg:
       - zsh
       - unattended-upgrades
+      # upgrade the kernel to 6.5
+      - linux-generic-hwe-22.04
 
 ## unattended upgrades
 - name: configre unattended-upgrades
