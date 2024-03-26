@@ -1,4 +1,5 @@
 - hosts: localhost
+  become: true
   connection: local
   vars_files:
     - default.config.yml
