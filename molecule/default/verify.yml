@@ -1,0 +1,12 @@
+---
+- name: Verify
+  hosts: all
+
+  tasks:
+    - name: k3s is up.
+      ansible.builtin.uri:
+        url: https://127.0.0.1:6443/
+        status_code: 401
+        validate_certs: false
+        retries: 5
+        delay: 5
