@@ -1,34 +1,47 @@
+---
+
+- name: Apt update
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      - multipath-tools
+      - curl
+
 # uninstall firewall
 - name: Remote ufw firewall
-  apt:
+  ansible.builtin.apt:
     name: ufw
     state: absent
     purge: true
 
 ## fix ulimit for k8s
-- name: limits
-  copy:
+- name: Limits
+  ansible.builtin.copy:
     src: files/limits_k8s.conf
     dest: '/etc/security/limits.d/k8s.conf'
     mode: '0644'
 
 ## fix multipathd
 - name: Multipathd config
-  copy:
+  ansible.builtin.copy:
     src: files/multipath.conf
     dest: '/etc/multipath.conf'
     mode: '0644'
 
 - name: Fix multipathd
-  systemd_service:
+  ansible.builtin.systemd_service:
     name: multipathd
     enabled: true
     state: restarted
 
 ## install k3s
-- name: Install k3s
-  shell: |
-    curl -fL https://get.k3s.io | \ 
+- name: Install k3s  # noqa: no-changed-when
+  args:
+    executable: /usr/bin/bash
+  ansible.builtin.shell: |
+    set -o pipefail
+    curl -fL https://get.k3s.io | \
       INSTALL_K3S_VERSION="{{ k3s.version }}" \
       K3S_KUBECONFIG_MODE="640" \
       INSTALL_K3S_EXEC="server \
@@ -39,21 +52,21 @@
       --disable local-storage \
       --disable metrics-server" sh -
 
-- name: allow sudoer access to k3s config
-  file:
+- name: Allow sudoer access to k3s config
+  ansible.builtin.file:
     path: /etc/rancher/k3s/k3s.yaml
     owner: root
     group: sudo
 
 ## shutdown helper
-- name: k3s shutdown helper
-  copy:
+- name: K3s shutdown helper
+  ansible.builtin.copy:
     src: 'files/k3s-shutdown.service'
     dest: '/etc/systemd/system/k3s-shutdown.service'
     mode: '0644'
 
 - name: Start k3s shutdown helper
-  systemd_service:
+  ansible.builtin.systemd_service:
     name: k3s-shutdown.service
     enabled: true
     daemon_reload: true

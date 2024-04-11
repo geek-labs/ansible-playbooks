@@ -1,0 +1,17 @@
+---
+- name: Add user
+  ansible.builtin.user:
+    name: '{{ item.username }}'
+    shell: /bin/zsh
+    groups: sudo,adm
+    append: true
+  loop: "{{ users }}"
+
+
+- name: Deploy SSH-Keys
+  ansible.posix.authorized_key:
+    user: '{{ item.0.username }}'
+    key: "{{ item.1 }}"
+  with_subelements:
+    - "{{ users }}"
+    - "keys"

@@ -27,10 +27,31 @@ jobs:
       - name: Install test dependencies.
         run: pip3 install ansible molecule molecule-plugins[docker] yamllint ansible-lint
 
-      - name: Run Molecule tests.
-        run: molecule test
+      - name: Env
+        run: |
+          python --version
+          molecule --version
+
+      - name: ubuntu_common
+        run: |
+          molecule test -s ubuntu_common
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           MOLECULE_DISTRO: ${{ matrix.distro }}
-        # working-directory: ./
+
+      - name: k3s
+        run: |
+          molecule test -s k3s
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distro }}
+
+      - name: users
+        run: |
+          molecule test -s users
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distro }}

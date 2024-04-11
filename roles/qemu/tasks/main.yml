@@ -1,12 +1,13 @@
-- name: basic packages
-  apt:
-    update_cache: yes
+---
+- name: Basic packages
+  ansible.builtin.apt:
+    update_cache: true
     cache_valid_time: 3600
     pkg:
       - qemu-guest-agent
 
 - name: Enable qemu daemon
-  systemd:
+  ansible.builtin.systemd:
     name: qemu-guest-agent
     enabled: true
     state: started

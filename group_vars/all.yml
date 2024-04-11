@@ -1,2 +1,6 @@
 k3s:
   version: v1.29.3+k3s1
+
+users:
+  - username: ubuntu
+    keys: []
