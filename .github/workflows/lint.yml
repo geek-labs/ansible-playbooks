@@ -1,3 +1,4 @@
+---
 name: Ansible Lint
 
 on: [push, pull_request]
@@ -15,4 +16,3 @@ jobs:
         uses: ibiqlik/action-yamllint@v3
         with:
           file_or_dir: ./roles/**/*.yml
-
