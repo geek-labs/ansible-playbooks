@@ -28,12 +28,13 @@
     src: files/multipath.conf
     dest: '/etc/multipath.conf'
     mode: '0644'
+  notify: 'restart multipathd service'
 
-- name: Fix multipathd
-  ansible.builtin.systemd_service:
-    name: multipathd
-    enabled: true
-    state: restarted
+- name: Check k3s version
+  ansible.builtin.command: "k3s --version | grep {{ k3s.version }}"
+  register: k3s_version_matches
+  ignore_errors: true
+  changed_when: false
 
 ## install k3s
 - name: Install k3s  # noqa: no-changed-when
@@ -51,6 +52,7 @@
       --disable traefik \
       --disable local-storage \
       --disable metrics-server" sh -
+  when: k3s_version_matches is failed
 
 - name: Allow sudoer access to k3s config
   ansible.builtin.file:
