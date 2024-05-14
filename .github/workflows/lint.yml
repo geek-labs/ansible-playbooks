@@ -11,7 +11,7 @@ jobs:
       # Important: This sets up your GITHUB_WORKSPACE environment variable
       - uses: actions/checkout@v4
       - name: Lint Ansible Playbook
-        uses: ansible/ansible-lint@main
+        uses: ansible/ansible-lint@v24.2.3
       - name: yaml-lint
         uses: ibiqlik/action-yamllint@v3
         with:

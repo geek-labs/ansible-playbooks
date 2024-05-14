@@ -1,0 +1,16 @@
+---
+
+- name: Apt update
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      - openssh-server
+
+- name: SSH server config
+  ansible.builtin.copy:
+    src: files/sshd_config
+    dest: '/etc/ssh/sshd_config'
+    owner: 'root'
+    mode: '0644'
+  notify: 'reload ssh service'

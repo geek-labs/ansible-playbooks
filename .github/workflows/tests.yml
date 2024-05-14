@@ -10,10 +10,6 @@ jobs:
   test:
     name: Molecule
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        distro:
-          - ubuntu2204
 
     steps:
       - name: Check out the codebase.
@@ -38,7 +34,7 @@ jobs:
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ${{ matrix.distro }}
+          MOLECULE_DISTRO: ubuntu2204
 
       - name: k3s
         run: |
@@ -46,7 +42,7 @@ jobs:
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ${{ matrix.distro }}
+          MOLECULE_DISTRO: ubuntu2204
 
       - name: users
         run: |
@@ -54,4 +50,28 @@ jobs:
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ${{ matrix.distro }}
+          MOLECULE_DISTRO: ubuntu2204
+
+      - name: users_bastion
+        run: |
+          molecule test -s users_bastion
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: debian12
+
+      - name: sshd
+        run: |
+          molecule test -s users_bastion
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: debian12
+
+      - name: debian_common
+        run: |
+          molecule test -s debian_common
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: debian12

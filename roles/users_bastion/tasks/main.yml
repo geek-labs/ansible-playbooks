@@ -1,0 +1,39 @@
+---
+- name: Add user
+  ansible.builtin.user:
+    name: '{{ item.username }}'
+    shell: /bin/rbash
+    groups: ''  # remove all the group memberships
+    append: false
+  loop: "{{ bastion_users }}"
+
+
+- name: Deploy SSH-Keys
+  ansible.posix.authorized_key:
+    user: '{{ item.0.username }}'
+    key: "{{ item.1 }}"
+  with_subelements:
+    - "{{ bastion_users }}"
+    - "keys"
+
+- name: Create bin
+  ansible.builtin.file:
+    path: "/home/{{ item.username }}/bin"
+    recurse: true
+    owner: '{{ item.username }}'
+    mode: '0500'
+    state: directory
+  loop: "{{ bastion_users }}"
+
+- name: Lockdown PATH
+  ansible.builtin.blockinfile:
+    path: "/home/{{ item.username }}/.bashrc"
+    block: |
+      PATH=/home/{{ item.username }}/bin
+      export PATH
+    state: present
+    attributes: i
+    owner: '{{ item.username }}'
+    create: true
+    mode: '0440'
+  loop: "{{ bastion_users }}"

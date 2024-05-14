@@ -1,0 +1,38 @@
+---
+
+- name: Apt update
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      - zsh
+      - unattended-upgrades
+      - ca-certificates
+      - apt-transport-https
+
+- name: Unattended-upgrades autoupgrades
+  ansible.builtin.copy:
+    src: 'files/unattended-upgrades/50unattended-upgrades'
+    dest: '/etc/apt/apt.conf.d/50unattended-upgrades'
+    mode: '0644'
+  register: unattended_upgrades_settings_set
+
+- name: Unattended-upgrades autoupgrades
+  ansible.builtin.copy:
+    src: 'files/unattended-upgrades/20auto-upgrades'
+    dest: '/etc/apt/apt.conf.d/20auto-upgrades'
+    mode: '0644'
+  register: unattended_upgrades_config_set
+
+- name: Dpkg reconfigure unattended-upgrades  # noqa: no-changed-when
+  ansible.builtin.command:
+    cmd: dpkg-reconfigure -f noninteractive unattended-upgrades
+  when: unattended_upgrades_config_set.changed or unattended_upgrades_settings_set.changed
+
+- name: Enable unattended-upgrades  # noqa: no-changed-when
+  ansible.builtin.shell: |
+    set -o pipefail
+    echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | debconf-set-selections
+  when: unattended_upgrades_config_set.changed or unattended_upgrades_settings_set.changed
+  args:
+    executable: /usr/bin/bash

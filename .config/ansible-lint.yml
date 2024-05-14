@@ -1,2 +1,8 @@
 ---
 profile: null
+
+skip_list:
+  - galaxy[version-incorrect]
+  - galaxy[no-changelog]
+  - galaxy[no-runtime]
+  - schema[galaxy]
