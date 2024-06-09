@@ -52,7 +52,7 @@
       --disable traefik \
       --disable local-storage \
       --disable metrics-server" sh -
-  when: k3s_version != {{ k3s.version }}
+  when: k3s_version != k3s.version
 
 - name: Allow sudoer access to k3s config
   ansible.builtin.file:
