@@ -1,0 +1,16 @@
+---
+namespace: "geeklabs"
+name: "common"
+version: "0.0.1"
+readme: "README.md"
+dependencies:
+  "community.general": "*"
+  "ansible.posix": "*"
+authors:
+  - us
+license:
+  - ""
+description: "Common roles for Geeklabs"
+repository: "https://www.github.com/KontextWork/ansible-playbooks"
+tags:
+  - infrastructure
