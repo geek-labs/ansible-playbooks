@@ -88,8 +88,9 @@
 - name: Create kubeconfig folder for calicoctl
   ansible.builtin.file:
     path: "/root/.kube"
-    recurse: true
     mode: '0500'
+    owner: root
+    group: root
     state: directory
     force: false
     modification_time: preserve
@@ -99,5 +100,4 @@
   ansible.builtin.file:
     src: /etc/rancher/k3s/k3s.yaml
     dest: /root/.kube/config
-    mode: '0600'
     state: link
