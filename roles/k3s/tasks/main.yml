@@ -1,5 +1,4 @@
 ---
-
 - name: Apt update
   ansible.builtin.apt:
     update_cache: true
@@ -31,14 +30,14 @@
   notify: 'restart multipathd service'
 
 - name: Check k3s version
-  ansible.builtin.command: "echo '{{ k3s.version }}'; k3s --version | grep '{{ k3s.version }}'"
-  register: k3s_version_matches
+  ansible.builtin.command: 'k3s --version'
+  register: k3s_version
   ignore_errors: true
   changed_when: false
   no_log: false
 
 ## install k3s
-- name: Install k3s  # noqa: no-changed-when
+- name: Install k3s # noqa: no-changed-when
   args:
     executable: /usr/bin/bash
   ansible.builtin.shell: |
@@ -53,7 +52,7 @@
       --disable traefik \
       --disable local-storage \
       --disable metrics-server" sh -
-  when: k3s_version_matches is failed
+  when: k3s_version != {{ k3s.version }}
 
 - name: Allow sudoer access to k3s config
   ansible.builtin.file:
@@ -87,7 +86,7 @@
 
 - name: Create kubeconfig folder for calicoctl
   ansible.builtin.file:
-    path: "/root/.kube"
+    path: '/root/.kube'
     mode: '0500'
     owner: root
     group: root
