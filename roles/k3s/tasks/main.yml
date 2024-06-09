@@ -31,11 +31,12 @@
   notify: 'restart multipathd service'
 
 - name: Check k3s version
-  ansible.builtin.command: "k3s --version | grep {{ k3s.version }}"
+  ansible.builtin.command: "echo '{{ k3s.version }}'; k3s --version | grep '{{ k3s.version }}'"
   register: k3s_version_matches
   ignore_errors: true
   changed_when: false
-  #no_log: true
+  no_log: true
+
 ## install k3s
 - name: Install k3s  # noqa: no-changed-when
   args:
