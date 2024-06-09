@@ -14,4 +14,3 @@ bastion_users:
   - username: myuser
     keys:
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAI/L+2sq3pKijShMkCDHGBopSXsa/qHHWHF+NZ/Pjtc eugen.mayer@kontextwork.de'
-
