@@ -2,8 +2,8 @@
 - name: Add user
   ansible.builtin.user:
     name: '{{ item.username }}'
-    shell: /bin/zsh
-    groups: sudo,adm
+    shell: '{{ item.shell }}'
+    groups: '{{ item.groups }}'
     append: true
   loop: "{{ users }}"
 

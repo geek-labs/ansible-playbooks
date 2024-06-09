@@ -21,7 +21,7 @@ provisioner:
   name: ansible
   inventory:
     links:
-      group_vars: ../../group_vars/
+      group_vars: ../group_vars/
   env:
     ANSIBLE_ROLES_PATH: "../../roles"
 
