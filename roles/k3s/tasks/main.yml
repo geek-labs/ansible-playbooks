@@ -37,7 +37,7 @@
   no_log: true
 
 ## install k3s
-- name: Install k3s # noqa: no-changed-when
+- name: Install k3s  # noqa: no-changed-when
   args:
     executable: /usr/bin/bash
   ansible.builtin.shell: |
