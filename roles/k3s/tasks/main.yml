@@ -30,8 +30,8 @@
   notify: 'restart multipathd service'
 
 - name: Check k3s version
-  ansible.builtin.command: 'k3s --version'
-  register: k3s_version
+  ansible.builtin.command: "k3s --version | grep '{{ k3s.version }}'"
+  register: k3s_version_matches
   ignore_errors: true
   changed_when: false
   no_log: false
@@ -52,7 +52,7 @@
       --disable traefik \
       --disable local-storage \
       --disable metrics-server" sh -
-  when: k3s_version != k3s.version
+  when: k3s_version_matches is failed
 
 - name: Allow sudoer access to k3s config
   ansible.builtin.file:
