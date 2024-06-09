@@ -35,7 +35,7 @@
   register: k3s_version_matches
   ignore_errors: true
   changed_when: false
-  no_log: true
+  no_log: false
 
 ## install k3s
 - name: Install k3s  # noqa: no-changed-when
