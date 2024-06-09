@@ -35,7 +35,7 @@
   register: k3s_version_matches
   ignore_errors: true
   changed_when: false
-  no_log: true
+  #no_log: true
 
 ## install k3s
 - name: Install k3s  # noqa: no-changed-when
@@ -101,3 +101,9 @@
     src: /etc/rancher/k3s/k3s.yaml
     dest: /root/.kube/config
     state: link
+
+- name: K3s uninstall tools
+  ansible.builtin.copy:
+    src: files/k3s-full-uninstall.sh
+    dest: '/root/k3s-full-uninstall.sh'
+    mode: '0700'

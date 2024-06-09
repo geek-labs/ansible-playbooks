@@ -11,6 +11,6 @@ authors:
 license:
   - ""
 description: "Common roles for Geeklabs"
-repository: "https://www.github.com/KontextWork/ansible-playbooks"
+repository: "https://www.github.com/geek-labs/ansible-playbooks"
 tags:
   - infrastructure
