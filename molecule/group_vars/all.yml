@@ -1,17 +1,16 @@
 ---
 
 k3s:
-  version: v1.29.3+k3s1
+  version: v1.29.5+k3s1
 
 users:
   - username: ubuntu
     shell: /bin/bash
     groups: sudo,adm
     keys:
-      - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPT7LaeAV1eoQepDpbEbwi2J7VOf9AgElcq/jritnOyI andre.ulrich@kontextwork.de'
-      - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAI/L+2sq3pKijShMkCDHGBopSXsa/qHHWHF+NZ/Pjtc eugen.mayer@kontextwork.de'
+      - 'ssh-ed25519 fake test@local.local'
 
 bastion_users:
   - username: myuser
     keys:
-      - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAI/L+2sq3pKijShMkCDHGBopSXsa/qHHWHF+NZ/Pjtc eugen.mayer@kontextwork.de'
+      - 'ssh-ed25519 fake test@local.local'
