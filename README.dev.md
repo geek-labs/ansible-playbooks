@@ -4,12 +4,22 @@
 
 First install `pyenv` and `virtualenv` via AUR or another source of your choice.
 
-#### quick
+#### Quickstart
 Run this, it will install the environment and the dependencies
 
 ```bash
 make init
 source venv/bin/activate
+```
+
+#### Tests
+
+To run a test do
+
+```bash
+molecule test -s ubuntu_common
+# or
+molecule test -s nut
 ```
 
 ##### IntelliJ

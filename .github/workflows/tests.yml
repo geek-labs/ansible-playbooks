@@ -21,7 +21,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install test dependencies.
-        run: pip3 install ansible molecule molecule-plugins[docker] yamllint ansible-lint
+        run: pip3 install ansible molecule 'molecule-plugins[docker]' yamllint ansible-lint
 
       - name: Env
         run: |
@@ -71,6 +71,14 @@ jobs:
       - name: debian_common
         run: |
           molecule test -s debian_common
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: debian12
+
+      - name: nut_client
+        run: |
+          molecule test -s nut_client
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'

@@ -1,0 +1,38 @@
+---
+
+- name: install nut
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      - nut-client
+
+- name: nut.conf
+  ansible.builtin.copy:
+    src: files/nut.conf
+    owner: root
+    group: nut
+    dest: '/etc/nut/nut.conf'
+    mode: '0650'
+
+- name: upsmon.conf
+  ansible.builtin.template:
+    src: templates/upsmon.conf.j2
+    dest: '/etc/nut/upsmon.conf'
+    owner: root
+    group: nut
+    mode: '0644'
+
+- name: upssched.conf
+  ansible.builtin.copy:
+    src: files/upssched.conf
+    owner: root
+    group: nut
+    dest: '/etc/nut/upssched.conf'
+    mode: '0650'
+
+- name: upssched-cmd
+  ansible.builtin.copy:
+    src: files/upssched-cmd
+    dest: '/bin/upssched-cmd'
+    mode: '0755'

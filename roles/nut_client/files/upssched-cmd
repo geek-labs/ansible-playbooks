@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# this is currently proxmox specific, we most probably want to have the target email more generic
+EMAIL=`cat /etc/pve/user.cfg | grep root | awk '{split($0,a,":"); print a[7]}'`
+HOST=$(uname -n)
+
+ case $1 in
+       onbatt)
+          logger -t upssched-cmd "UPS on battery"
+          # force shutdown
+          /usr/sbin/upsmon -c fsd
+          ;;
+        commbad_message)
+          echo "UPS is not connected" | mailx -s "Proxmox ($HOST): UPS Warning" $EMAIL
+          ;;
+        online)
+          logger -t upssched-cmd "UPS Online"
+          ;;
+        commok_message)
+          echo "UPS is connected again" | mailx -s "Proxmox ($HOST): UPS Warning" $EMAIL
+          ;;
+        nocomm_message)
+          echo "UPS is not reachable" | mailx -s "Proxmox ($HOST): UPS Warning" $EMAIL
+          ;;
+        shutdowncritical)
+          logger -t upssched-cmd "UPS on battery critical, forced shutdown"
+          ;;
+        upsgone)
+          logger -t upssched-cmd "UPS has been gone too long, can't reach"
+          ;;
+        shutdown_message)
+          echo "Shutdown" | mailx -s "Shutdown ($HOST): UPS Warning" $EMAIL
+          ;;
+       *)
+          logger -t upssched-cmd "Unrecognized command: $1"
+          ;;
+ esac
