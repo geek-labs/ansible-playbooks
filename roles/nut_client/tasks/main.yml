@@ -1,13 +1,13 @@
 ---
 
-- name: install nut
+- name: Install nut
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
     pkg:
       - nut-client
 
-- name: nut.conf
+- name: Deploy nut.conf
   ansible.builtin.copy:
     src: files/nut.conf
     owner: root
@@ -15,7 +15,7 @@
     dest: '/etc/nut/nut.conf'
     mode: '0650'
 
-- name: upsmon.conf
+- name: Deploy upsmon.conf
   ansible.builtin.template:
     src: templates/upsmon.conf.j2
     dest: '/etc/nut/upsmon.conf'
@@ -23,7 +23,7 @@
     group: nut
     mode: '0644'
 
-- name: upssched.conf
+- name: Deploy upssched.conf
   ansible.builtin.copy:
     src: files/upssched.conf
     owner: root
@@ -31,7 +31,7 @@
     dest: '/etc/nut/upssched.conf'
     mode: '0650'
 
-- name: upssched-cmd
+- name: Deploy upssched-cmd
   ansible.builtin.copy:
     src: files/upssched-cmd
     dest: '/bin/upssched-cmd'
