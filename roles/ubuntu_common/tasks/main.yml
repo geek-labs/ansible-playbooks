@@ -7,8 +7,22 @@
     pkg:
       - zsh
       - unattended-upgrades
-      # upgrade the kernel to 6.5
+
+- name: Install jammy kernel
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
       - linux-generic-hwe-22.04
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version = "22.04"
+
+- name: Install noble kernel
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      - linux-generic-hwe-24.04
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version = "24.04"
 
 - name: Unattended-upgrades autoupgrades
   ansible.builtin.copy:
