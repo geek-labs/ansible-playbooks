@@ -14,7 +14,7 @@
     cache_valid_time: 3600
     pkg:
       - linux-generic-hwe-22.04
-  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version = "22.04"
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == "22.04"
 
 - name: Install noble kernel
   ansible.builtin.apt:
@@ -22,7 +22,7 @@
     cache_valid_time: 3600
     pkg:
       - linux-generic-hwe-24.04
-  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version = "24.04"
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == "24.04"
 
 - name: Unattended-upgrades autoupgrades
   ansible.builtin.copy:
