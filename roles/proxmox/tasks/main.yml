@@ -1,0 +1,15 @@
+---
+
+
+- name: Deploy pve apt sources
+  ansible.builtin.copy:
+    src: files/pve-non-enterprise.list
+    owner: root
+    group: nut
+    dest: '/etc/apt/sources.list.d/pve-non-enterprise.list'
+    mode: '0622'
+
+- name: Remove enterprise apt sources
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/pve-enterprise.list
+    state: delete
