@@ -19,7 +19,7 @@ To run a test do
 ```bash
 molecule test -s ubuntu_common
 # or
-molecule test -s nut
+molecule test -s nut_client
 ```
 
 ##### IntelliJ

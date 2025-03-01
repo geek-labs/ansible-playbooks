@@ -1,6 +1,5 @@
 ---
 
-
 - name: Deploy pve apt sources
   ansible.builtin.copy:
     src: files/pve-non-enterprise.list
