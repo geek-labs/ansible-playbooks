@@ -12,3 +12,23 @@
   ansible.builtin.file:
     path: /etc/apt/sources.list.d/pve-enterprise.list
     state: absent
+
+- name: Install basic packages
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      - vim
+      - nfs-common
+
+- name: Unattended-upgrades for pve
+  ansible.builtin.copy:
+    src: 'files/unattended-upgrades/51unattended-upgrades'
+    dest: '/etc/apt/apt.conf.d/10unattended-upgrades'
+    mode: '0644'
+  register: unattended_upgrades_pve_settings_set
+
+- name: Dpkg reconfigure unattended-upgrades  # noqa: no-changed-when
+  ansible.builtin.command:
+    cmd: dpkg-reconfigure -f noninteractive unattended-upgrades
+  when: unattended_upgrades_pve_settings_set.changed
