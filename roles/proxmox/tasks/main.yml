@@ -4,7 +4,7 @@
   ansible.builtin.copy:
     src: files/pve-non-enterprise.list
     owner: root
-    group: nut
+    group: r oot
     dest: '/etc/apt/sources.list.d/pve-non-enterprise.list'
     mode: '0622'
 
