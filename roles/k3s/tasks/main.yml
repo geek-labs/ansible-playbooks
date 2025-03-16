@@ -8,7 +8,7 @@
       - curl
 
 # uninstall firewall
-- name: Remote ufw firewall
+- name: Remove ufw firewall
   ansible.builtin.apt:
     name: ufw
     state: absent

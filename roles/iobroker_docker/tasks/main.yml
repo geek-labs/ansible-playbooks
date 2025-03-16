@@ -1,0 +1,37 @@
+---
+- name: Apt update
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      - curl
+
+# uninstall firewall
+- name: Remove ufw firewall
+  ansible.builtin.apt:
+    name: ufw
+    state: absent
+    purge: true
+
+## fix ulimits
+- name: Limits
+  ansible.builtin.copy:
+    src: files/limits.conf
+    dest: '/etc/security/limits.d/iobroker.conf'
+    mode: '0644'
+
+- name: Create iobroker home
+  ansible.builtin.file:
+    path: "/opt/iobroker"
+    recurse: true
+    owner: 'ubuntu'
+    mode: '0770'
+    state: directory
+
+- name: Docker compose
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: '/opt/iobroker/docker-compose.yml'
+    owner: ubuntu
+    group: nut
+    mode: '0644'

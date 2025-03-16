@@ -1,0 +1,36 @@
+---
+- name: Apt update
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      - curl
+
+# uninstall firewall
+- name: Remove ufw firewall
+  ansible.builtin.apt:
+    name: ufw
+    state: absent
+    purge: true
+
+## fix ulimits
+- name: Limits
+  ansible.builtin.copy:
+    src: files/limits.conf
+    dest: '/etc/security/limits.d/iobroker.conf'
+    mode: '0644'
+
+- name: Check ioBroker already installed
+  ansible.builtin.shell: "test -f /opt/iobroker/INSTALLER_INFO.txt"
+  register: ioBroker_already_installed
+  ignore_errors: true
+  changed_when: false
+  no_log: true
+
+- name: Install ioBroker  # noqa: no-changed-when
+  args:
+    executable: /usr/bin/bash
+  ansible.builtin.shell: |
+    set -o pipefail
+    curl -sLf https://iobroker.net/install.sh | bash -
+  when: ioBroker_already_installed is failed
