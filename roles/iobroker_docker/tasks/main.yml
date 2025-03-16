@@ -33,5 +33,5 @@
     src: templates/docker-compose.yml.j2
     dest: '/opt/iobroker/docker-compose.yml'
     owner: ubuntu
-    group: nut
+    group: ubuntu
     mode: '0644'
