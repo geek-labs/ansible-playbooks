@@ -24,7 +24,8 @@
   ansible.builtin.file:
     path: "/opt/iobroker"
     recurse: true
-    owner: 'ubuntu'
+    owner: ubuntu
+    group: ubuntu
     mode: '0770'
     state: directory
 
