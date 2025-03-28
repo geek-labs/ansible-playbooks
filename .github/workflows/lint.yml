@@ -11,8 +11,7 @@ jobs:
       # Important: This sets up your GITHUB_WORKSPACE environment variable
       - uses: actions/checkout@v4
       - name: Lint Ansible Playbook
-        uses: ansible/ansible-lint@v24.6.0
-      - name: yaml-lint
-        uses: ibiqlik/action-yamllint@v3
+        # see https://github.com/marketplace/actions/run-ansible-lint
+        uses: ansible/ansible-lint@v25.1.3
         with:
-          file_or_dir: ./roles/**/*.yml
+          args: "-c .config/ansible-lint.yml"

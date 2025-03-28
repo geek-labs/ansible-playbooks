@@ -21,73 +21,25 @@ jobs:
           python-version: '3.x'
 
       - name: Install test dependencies.
-        run: pip3 install ansible molecule 'molecule-plugins[docker]' yamllint ansible-lint
+        run: pip3 install -r requirements.txt
 
       - name: Env
         run: |
           python --version
           molecule --version
 
-      - name: ubuntu_common
+      - name: all debian based tests
         run: |
-          molecule test -s ubuntu_common
+          molecule test --no-parallel --destroy always --all -e ubuntu_common
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: debian12
+
+      - name: all ubuntu based tests
+        run: |
+          molecule test --no-parallel --destroy always -s ubuntu_common
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           MOLECULE_DISTRO: ubuntu2204
-
-      - name: k3s
-        run: |
-          molecule test -s k3s
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ubuntu2204
-
-      - name: users
-        run: |
-          molecule test -s users
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ubuntu2204
-
-      - name: users_bastion
-        run: |
-          molecule test -s users_bastion
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: debian12
-
-      - name: sshd
-        run: |
-          molecule test -s users_bastion
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: debian12
-
-      - name: debian_common
-        run: |
-          molecule test -s debian_common
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: debian12
-
-      - name: nut_client
-        run: |
-          molecule test -s nut_client
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: debian12
-
-      - name: proxmox
-        run: |
-          molecule test -s nut_client
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: debian12

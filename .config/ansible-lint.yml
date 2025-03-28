@@ -1,4 +1,5 @@
 ---
+# see https://ansible.readthedocs.io/projects/lint/configuring/#ansible-lint-configuration
 profile: null
 
 skip_list:
@@ -6,3 +7,6 @@ skip_list:
   - galaxy[no-changelog]
   - galaxy[no-runtime]
   - schema[galaxy]
+
+exclude_paths:
+  - molecule/
