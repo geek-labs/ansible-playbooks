@@ -2,6 +2,11 @@
 
 k3s_version: v1.32.1+k3s1
 
+nut:
+  client:
+    ups_ip: 10.10.10.10
+
+
 fail2ban:
   banaction: iptables
 
