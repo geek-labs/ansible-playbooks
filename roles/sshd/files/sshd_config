@@ -25,13 +25,14 @@ AuthenticationMethods publickey
 PubkeyAuthentication yes
 
 ### by mozzillas guide https://wiki.mozilla.org/Security/Guidelines/OpenSSH
-# HINT!!!: we remove 'ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256' from KexAlgorithms since they are considered broken due to NSA, see https://github.com/jtesta/ssh-audit/issues/213
 # Supported HostKey algorithms by order of preference.
 HostKey /etc/ssh/ssh_host_ed25519_key
 HostKey /etc/ssh/ssh_host_rsa_key
 HostKey /etc/ssh/ssh_host_ecdsa_key
 
+# HINT!!!: not part of mozzillas stadard, but required byt our ssh-audit
 HostKeyAlgorithms rsa-sha2-512,rsa-sha2-256,ssh-ed25519
+# HINT!!!: we remove 'ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256' from KexAlgorithms since they are considered broken due to NSA, see https://github.com/jtesta/ssh-audit/issues/213
 KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256
 Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
 
