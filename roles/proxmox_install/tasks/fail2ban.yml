@@ -1,0 +1,46 @@
+---
+
+#### Fail2ban
+
+- name: Create fail2ban config folder
+  ansible.builtin.file:
+    path: "/etc/fail2ban"
+    recurse: false
+    owner: 'root'
+    group: 'root'
+    mode: '0500'
+    state: directory
+
+- name: Create fail2ban jail.d
+  ansible.builtin.file:
+    path: "/etc/fail2ban/jail.d"
+    recurse: false
+    owner: 'root'
+    group: 'root'
+    mode: '0500'
+    state: directory
+
+- name: Create fail2ban filter.d
+  ansible.builtin.file:
+    path: "/etc/fail2ban/filter.d"
+    recurse: false
+    owner: 'root'
+    group: 'root'
+    mode: '0500'
+    state: directory
+
+- name: Create fail2ban proxmox gui config
+  ansible.builtin.template:
+    src: templates/proxmox.jail.conf.j2
+    dest: '/etc/fail2ban/jail.d/proxmox.conf'
+    owner: root
+    group: root
+    mode: '0444'
+
+- name: Create fail2ban proxmox gui config
+  ansible.builtin.template:
+    src: templates/proxmox.filter.conf.j2
+    dest: '/etc/fail2ban/filter.d/proxmox.conf'
+    owner: root
+    group: root
+    mode: '0444'

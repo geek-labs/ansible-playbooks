@@ -33,7 +33,7 @@
     mode: '0644'
   register: unattended_upgrades_pve_settings_set
 
-- name: Dpkg reconfigure unattended-upgrades  # noqa: no-changed-when
+- name: Dpkg reconfigure unattended-upgrades  # noqa: no-changed-when # noqa: no-handler
   ansible.builtin.command:
     cmd: dpkg-reconfigure -f noninteractive unattended-upgrades
   when: unattended_upgrades_pve_settings_set.changed

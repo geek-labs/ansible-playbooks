@@ -1,0 +1,30 @@
+---
+
+- name: Install fail2ban
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      - fail2ban
+      # needed so we have log files to parse
+      - rsyslog
+
+- name: Create fail2ban config
+  ansible.builtin.template:
+    src: templates/jail.local.j2
+    dest: '/etc/fail2ban/jail.local'
+    owner: root
+    group: root
+    mode: '0440'
+  notify: 'restart fail2ban service'
+
+- name: Remove default config
+  ansible.builtin.file:
+    path: /etc/fail2ban/jail.d/defaults-debian.conf
+    state: absent
+
+- name: Start fail2ban service
+  ansible.builtin.systemd_service:
+    name: fail2ban.service
+    enabled: true
+    daemon_reload: true

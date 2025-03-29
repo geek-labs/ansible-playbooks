@@ -1,0 +1,30 @@
+---
+
+##### backup folder
+
+- name: Mnt folder
+  ansible.builtin.file:
+    path: "/mnt"
+    recurse: false
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+    state: directory
+
+- name: Backup folder
+  ansible.builtin.file:
+    path: "/mnt/backup"
+    recurse: false
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+    state: directory
+
+- name: Backup local folder
+  ansible.builtin.file:
+    path: "/mnt/backup_local"
+    recurse: false
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+    state: directory

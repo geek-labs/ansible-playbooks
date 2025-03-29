@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: check if sshd is running
+      ansible.builtin.shell: ss -tp state listening sport = :22 | grep ssh
+    - name: check host based authentication is turned off
+      ansible.builtin.shell: cat /etc/ssh/sshd_config | grep "HostbasedAuthentication no"
+    - name: check password based auth is turned off
+      ansible.builtin.shell: cat /etc/ssh/sshd_config | grep "PasswordAuthentication no"
+    - name: check empty passwords is turned off
+      ansible.builtin.shell: cat /etc/ssh/sshd_config | grep "PermitEmptyPasswords no"
+    - name: check rsa not allowed
+      ansible.builtin.shell: cat /etc/ssh/sshd_config | grep -v "+rsa"
+    - name: fail2ban sshd config exists
+      ansible.builtin.command: test -f /etc/fail2ban/jail.d/ssh.conf

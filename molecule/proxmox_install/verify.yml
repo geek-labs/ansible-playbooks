@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: proxmox config exists
+      ansible.builtin.command: test -d /etc/pve
+    - name: fail2ban proxmox jail exists
+      ansible.builtin.command: test -f /etc/fail2ban/jail.d/proxmox.conf
+    - name: fail2ban proxmox filter exists
+      ansible.builtin.command: test -f /etc/fail2ban/filter.d/proxmox.conf
+    - name: proxmox api secured
+      ansible.builtin.command: test -f /etc/default/pveproxy
+    - name: backup folder exists
+      ansible.builtin.command: test -d /mnt/backup
+    - name: backup local folder exists
+      ansible.builtin.command: test -d /mnt/backup_local

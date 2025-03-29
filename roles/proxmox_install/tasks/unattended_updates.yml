@@ -1,0 +1,13 @@
+---
+# auto upgrade configuration for proxmox
+- name: Unattended-upgrades for pve
+  ansible.builtin.copy:
+    src: 'files/unattended-upgrades/51unattended-upgrades'
+    dest: '/etc/apt/apt.conf.d/10unattended-upgrades'
+    mode: '0644'
+  register: unattended_upgrades_pve_settings_set
+
+- name: Dpkg reconfigure unattended-upgrades  # noqa: no-changed-when no-handler
+  ansible.builtin.command:
+    cmd: dpkg-reconfigure -f noninteractive unattended-upgrades
+  when: unattended_upgrades_pve_settings_set.changed

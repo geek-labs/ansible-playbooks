@@ -1,0 +1,90 @@
+---
+
+- name: Get facts on current container
+  community.docker.current_container_facts:
+
+- name: Set a hostname for our proxmox
+  ansible.builtin.hostname:
+    name: "{{ proxmox.hostname }}"
+    use: "debian"
+  # this will not within a container - which we run our tests in
+  when: not ansible_module_running_in_container
+
+- name: Install basic packages
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 0
+    pkg:
+      - gpg
+      - gnupg2
+      - dirmngr
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - unattended-upgrades
+      - bridge-utils
+      - sudo
+      - lsb-release
+
+- name: Deploy pve apt sources
+  ansible.builtin.copy:
+    src: files/pve-non-enterprise.list
+    owner: root
+    group: root
+    dest: '/etc/apt/sources.list.d/pve-non-enterprise.list'
+    mode: '0622'
+
+- name: Install proxmox gpg key
+  ansible.builtin.apt_key:
+    url: https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg
+    keyring: /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg
+
+- name: Install proxmox
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 0
+    pkg:
+      - proxmox-ve
+      # things that are installed by default when we use the iso installer
+      - ksm-control-daemon
+      - open-iscsi
+      - systemd-sysv
+      # backup utils
+      - cifs-utils
+      - nfs-common
+
+# those are created by the installer, get rid of those
+- name: Remove enterprise pve sources
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/pve-enterprise.list
+    state: absent
+
+- name: Remove enterprise ceph sources
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/ceph.list
+    state: absent
+# basic network config
+
+- name: Disable ipv6
+  ansible.posix.sysctl:
+    name: net.ipv6.conf.all.disable_ipv6
+    value: '1'
+    sysctl_set: true
+
+- name: Block PVE api access only for allowed hosts
+  ansible.builtin.template:
+    src: templates/pveproxy.j2
+    dest: '/etc/default/pveproxy'
+    owner: root
+    group: root
+    mode: '0444'
+  notify: "restart pveproxy service"
+
+- name: Include backups
+  ansible.builtin.include_tasks: backups.yml
+- name: Include fail2ban
+  ansible.builtin.include_tasks: fail2ban.yml
+- name: Include raid
+  ansible.builtin.include_tasks: raid.yml
+- name: Include unattended_updates
+  ansible.builtin.include_tasks: unattended_updates.yml

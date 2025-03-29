@@ -1,0 +1,7 @@
+---
+- name: Restart pveproxy service
+  ansible.builtin.systemd_service:
+    name: pveproxy
+    enabled: true
+    state: restarted
+  listen: 'restart pveproxy service'

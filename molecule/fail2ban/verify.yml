@@ -1,0 +1,6 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: fail2ban proxmox config
+      ansible.builtin.command: test -f /etc/fail2ban/jail.local

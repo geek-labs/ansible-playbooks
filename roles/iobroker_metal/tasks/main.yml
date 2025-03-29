@@ -21,8 +21,8 @@
     mode: '0644'
 
 - name: Check ioBroker already installed
-  ansible.builtin.shell: "test -f /opt/iobroker/INSTALLER_INFO.txt"
-  register: ioBroker_already_installed
+  ansible.builtin.shell: test -f /opt/iobroker/INSTALLER_INFO.txt  # noqa: command-instead-of-shell
+  register: iobroker_already_installed
   ignore_errors: true
   changed_when: false
   no_log: true
@@ -33,4 +33,4 @@
   ansible.builtin.shell: |
     set -o pipefail
     curl -sLf https://iobroker.net/install.sh | bash -
-  when: ioBroker_already_installed is failed
+  when: iobroker_already_installed is failed

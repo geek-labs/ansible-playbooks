@@ -1,0 +1,6 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Disk resize script exists
+      ansible.builtin.command: test -f /usr/local/bin/kw_resize_partition

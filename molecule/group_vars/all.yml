@@ -1,7 +1,13 @@
 ---
 
-k3s:
-  version: v1.29.5+k3s1
+k3s_version: v1.30.4+k3s1
+
+fail2ban:
+  banaction: iptables
+
+proxmox:
+  api_host_access_limit: 10.1.0.0/24
+  hostname: myproxmox
 
 users:
   - username: ubuntu

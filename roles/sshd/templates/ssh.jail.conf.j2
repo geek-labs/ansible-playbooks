@@ -1,0 +1,14 @@
+[sshd]
+enabled = true
+port=22
+maxretry = 3
+findtime = 660
+bantime = 3600
+# Do not use aggressive, this is not what we want, see https://github.com/fail2ban/fail2ban/issues/3259
+# mode= aggressive
+mode = normal
+# disabled public key checking since this regularly bans us when using chef deployments
+# and key-scans happen
+# Includes support to ban public-key login attempts see https://github.com/fail2ban/fail2ban/issues/3259
+# filter = %(known/filter)s[publickey=any]
+filter = sshd

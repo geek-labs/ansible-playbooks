@@ -1,0 +1,16 @@
+---
+
+- name: Apt update
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      - parted
+
+- name: Deploy pve apt sources
+  ansible.builtin.copy:
+    src: files/kw_resize_partition.sh
+    owner: root
+    group: root
+    dest: '/usr/local/bin/kw_resize_partition'
+    mode: '0550'

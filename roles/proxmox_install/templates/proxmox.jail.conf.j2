@@ -1,0 +1,9 @@
+[proxmox]
+enabled = true
+port = https,http,8006
+filter = proxmox
+# the logfile to parse, with rsylslog this is the expectation
+logpath = /var/log/syslog
+maxretry = 3
+# 1 hour
+bantime = 3600
