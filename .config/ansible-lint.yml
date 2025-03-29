@@ -7,6 +7,7 @@ skip_list:
   - galaxy[no-changelog]
   - galaxy[no-runtime]
   - schema[galaxy]
-
+  - yaml[line-length]
+  - yaml[empty-lines]
 exclude_paths:
   - molecule/

@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Ensure default sources list has no entries
+      ansible.builtin.shell: cat /etc/apt/sources.list | grep -v "deb"
+    - name: Stable repo exists
+      ansible.builtin.command: test -f /etc/apt/sources.list.d/stable.list
+    - name: Updates repo exists
+      ansible.builtin.command: test -f /etc/apt/sources.list.d/updates.list
+    - name: Ensure updates list has the porper url
+      ansible.builtin.shell: cat /etc/apt/sources.list.d/updates.list | grep '\-updates'
+    - name: Stable repo exists
+      ansible.builtin.command: test -f /etc/apt/sources.list.d/security.list
+    - name: Ensure security list has the porper url
+      ansible.builtin.shell: cat /etc/apt/sources.list.d/security.list | grep 'debian\-security'

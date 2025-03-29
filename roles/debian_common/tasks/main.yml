@@ -1,10 +1,14 @@
 ---
 
+- name: Configure repositories
+  ansible.builtin.include_tasks: repositories.yml
+
 - name: Apt update
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
     pkg:
+      - vim
       - zsh
       - unattended-upgrades
       - ca-certificates
