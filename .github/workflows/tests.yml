@@ -38,7 +38,7 @@ jobs:
 
       - name: all ubuntu based tests
         run: |
-          molecule test --no-parallel --destroy always --all -e debian_common
+          molecule test --no-parallel --destroy always --all -e debian_common -e proxmox_install
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
