@@ -14,3 +14,5 @@
       ansible.builtin.command: test -d /mnt/backup
     - name: backup local folder exists
       ansible.builtin.command: test -d /mnt/backup_local
+    - name: No pve in aot sources
+      ansible.builtin.shell: test ! -f /etc/apt/sources.list || cat /etc/apt/sources.list | grep -v pve

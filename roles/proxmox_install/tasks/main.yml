@@ -10,6 +10,30 @@
   # this will not within a container - which we run our tests in
   when: not ansible_module_running_in_container
 
+# this can happen if the proxmox installation (bare metal) happened via the iso
+- name: Check apt sources for pve
+  ansible.builtin.shell: |
+    set -o pipefail
+    if test -f /etc/apt/sources.list; then
+      # test for existence. If the entry exists, we have exit code 0
+      cat /etc/apt/sources.list | grep pve
+    else 
+      # means it does not exist - all good
+      exit 1 
+    fi
+  args:
+    executable: /usr/bin/bash
+  register: pve_exists_in_apt_source
+  failed_when: "pve_exists_in_apt_source.rc > 1"
+  changed_when: "pve_exists_in_apt_source.rc == 0"
+
+# if installed via the iso, the pve sources are in /etc/apt/sources.list,
+# but we want to use /etc/apt/sources.list.d/pve-non-enterprise.list
+- name: Remove pve from default source
+  ansible.builtin.command: sed -i '/pve/d' /etc/apt/sources.list
+  when: "pve_exists_in_apt_source.rc == 0"
+  changed_when: "pve_exists_in_apt_source.rc == 0"
+
 - name: Install basic packages
   ansible.builtin.apt:
     update_cache: true
@@ -25,6 +49,7 @@
       - bridge-utils
       - sudo
       - lsb-release
+
 
 - name: Deploy pve apt sources
   ansible.builtin.copy:
@@ -79,6 +104,7 @@
     group: root
     mode: '0444'
   notify: "restart pveproxy service"
+
 
 - name: Include backups
   ansible.builtin.include_tasks: backups.yml
