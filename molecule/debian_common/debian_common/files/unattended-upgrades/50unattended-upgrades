@@ -1,0 +1,17 @@
+Unattended-Upgrade::Allowed-Origins {
+};
+
+# maybe try imitating https://github.com/hifis-net/ansible-role-unattended-upgrades/blob/main/templates/unattended-upgrades.j2
+Unattended-Upgrade::Origins-Pattern {
+	"origin=${distro_id},codename=${distro_codename}";
+	"origin=${distro_id},codename=${distro_codename}-updates";
+	"origin=${distro_id},codename=${distro_codename}-proposed-updates";
+	"origin=${distro_id},codename=${distro_codename},label=Debian";
+	"origin=${distro_id},codename=${distro_codename},label=Debian-Security";
+	"origin=${distro_id},codename=${distro_codename}-security,label=Debian-Security";
+};
+
+Unattended-Upgrade::Package-Blacklist {
+};
+
+Unattended-Upgrade::DevRelease "auto";
