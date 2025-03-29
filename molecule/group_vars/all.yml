@@ -21,6 +21,3 @@ bastion_users:
   - username: myuser
     keys:
       - 'ssh-ed25519 fake test@local.local'
-nut:
-  client:
-    ups_ip: 10.5.5.5
