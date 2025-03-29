@@ -14,14 +14,14 @@
       - ca-certificates
       - apt-transport-https
 
-- name: Unattended-upgrades autoupgrades
+- name: Unattended-upgrades config
   ansible.builtin.copy:
     src: 'files/unattended-upgrades/50unattended-upgrades'
     dest: '/etc/apt/apt.conf.d/50unattended-upgrades'
     mode: '0644'
   register: unattended_upgrades_settings_set
 
-- name: Unattended-upgrades autoupgrades
+- name: Unattended-upgrades auto-upgrades
   ansible.builtin.copy:
     src: 'files/unattended-upgrades/20auto-upgrades'
     dest: '/etc/apt/apt.conf.d/20auto-upgrades'

@@ -1,34 +1,41 @@
 ---
 
-- name: Override sources.list with blank
-  ansible.builtin.copy:
-    src: 'files/sources.list'
-    dest: '/etc/apt/sources.list'
-    mode: '0644'
-
 - name: Add stable repository
   ansible.builtin.apt_repository:
     repo: deb http://ftp2.de.debian.org/debian {{ ansible_distribution_release }} main contrib non-free non-free-firmware
     state: present
     filename: stable
+    update_cache: false
 
 - name: Add update repository
   ansible.builtin.apt_repository:
     repo: deb http://ftp2.de.debian.org/debian {{ ansible_distribution_release }}-updates main contrib non-free non-free-firmware
     state: present
     filename: updates
+    update_cache: false
 
 - name: Add security repository
   ansible.builtin.apt_repository:
     repo: deb http://security.debian.org/debian-security {{ ansible_distribution_release }}-security main
     state: present
     filename: security
+    update_cache: false
+
+
+- name: Override sources.list with blank
+  ansible.builtin.copy:
+    src: 'files/sources.list'
+    dest: '/etc/apt/sources.list'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
 
 ## cleanup
 - name: Remove hetzner security list
   ansible.builtin.file:
     path: /etc/apt/sources.list.d/hetzner-security-updates.list
     state: absent
+
 
 - name: Remove docker default list
   ansible.builtin.file:
