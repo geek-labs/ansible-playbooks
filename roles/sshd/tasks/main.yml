@@ -41,11 +41,14 @@
     mode: '0440'
 
 - name: Re-generate SSH host keys
-  ansible.builtin.shell:
+  ansible.builtin.shell: |
     rm /etc/ssh/ssh_host_*
     ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
     ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
     awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.safe
     mv /etc/ssh/moduli.safe /etc/ssh/moduli
+    
     touch /etc/ssh/.hardening032025
-  creates: /etc/ssh/.hardening032025
+  args:
+    creates: /etc/ssh/.hardening032025
+    executable: /usr/bin/bash

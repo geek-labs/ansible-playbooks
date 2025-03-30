@@ -23,31 +23,6 @@ HostbasedAuthentication no
 IgnoreRhosts yes
 AuthenticationMethods publickey
 PubkeyAuthentication yes
-Port 22
-AcceptEnv LANG LC_*
-ChallengeResponseAuthentication no
-GSSAPIAuthentication no
-HostKey /etc/ssh/ssh_host_rsa_key
-HostKey /etc/ssh/ssh_host_ed25519_key
-HostKey /etc/ssh/ssh_host_ecdsa_key
-PasswordAuthentication no
-PrintMotd no
-Protocol 2
-SyslogFacility AUTH
-UsePAM yes
-X11Forwarding no
-X11UseLocalhost no
-
-VersionAddendum none
-AddressFamily inet
-PermitEmptyPasswords no
-PermitUserEnvironment no
-LoginGraceTime 0
-UseDNS no
-HostbasedAuthentication no
-IgnoreRhosts yes
-AuthenticationMethods publickey
-PubkeyAuthentication yes
 
 ### ### https://www.ssh-audit.com/hardening_guides.html#debian_12
 # Supported HostKey algorithms by order of preference.
@@ -67,4 +42,3 @@ LogLevel VERBOSE
 
 # Log sftp level file access (read/write/etc.) that would not be easily logged otherwise.
 Subsystem sftp /usr/lib/openssh/sftp-server -f AUTHPRIV -l INFO
-

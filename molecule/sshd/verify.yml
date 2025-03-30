@@ -14,3 +14,9 @@
       ansible.builtin.shell: cat /etc/ssh/sshd_config | grep -v "+rsa"
     - name: fail2ban sshd config exists
       ansible.builtin.command: test -f /etc/fail2ban/jail.d/ssh.conf
+    - name: Ensure hardening happened
+      ansible.builtin.command: test -f /etc/ssh/.hardening032025
+    - name: Ensure hardening ssh rsa mey
+      ansible.builtin.command: test -f /etc/ssh/ssh_host_rsa_key
+    - name: Ensure hardening ed25519 key
+      ansible.builtin.command: test -f /etc/ssh/ssh_host_ed25519_key

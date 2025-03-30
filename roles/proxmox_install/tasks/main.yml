@@ -57,7 +57,7 @@
     owner: root
     group: root
     dest: '/etc/apt/sources.list.d/pve-non-enterprise.list'
-    mode: '0622'
+    mode: '0644'
 
 - name: Install proxmox gpg key
   ansible.builtin.apt_key:
