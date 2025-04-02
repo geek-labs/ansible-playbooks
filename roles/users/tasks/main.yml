@@ -1,17 +1,34 @@
 ---
-- name: Add user
+
+- name: Add selected users
+  ansible.builtin.user:
+    name: "{{ item.username }}"
+    shell: "{{ item.shell | default('/bin/sh') }}"
+    groups: "{{ item.groups | default('') }}"
+    append: "{{ item.groups_append | default(true) }}"
+    state: present
+  when: item.username in user_selection
+  loop: "{{ users_catalog | list }}"
+
+- name: Remove catalog users that have not been selected
+  ansible.builtin.user:
+    name: "{{ item.username }}"
+    state: absent
+    force: true  # ensure user is deleted if absent is used
+  when: item.username not in user_selection and item.username != "root"  # when the user has not been selected, remove it - except if it is root
+  loop: "{{ users_catalog | list }}"
+
+- name: Set user passwords
   ansible.builtin.user:
     name: '{{ item.username }}'
-    shell: '{{ item.shell }}'
-    groups: '{{ item.groups }}'
-    append: true
-  loop: "{{ users }}"
-
+    password: "{{ item.password }}"
+  when: item.username in user_selection and item.password | default ('') != ''
+  loop: "{{ users_catalog | list }}"
 
 - name: Deploy SSH-Keys
   ansible.posix.authorized_key:
-    user: '{{ item.0.username }}'
-    key: "{{ item.1 }}"
-  with_subelements:
-    - "{{ users }}"
-    - "keys"
+    user: '{{ item.username }}'
+    key: "{{ item.ssh_keys | default([]) | list | join('\n') }}"
+    exclusive: true
+  when: item.username in user_selection
+  loop: "{{ users_catalog | list }}"

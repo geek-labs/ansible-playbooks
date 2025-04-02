@@ -1,5 +1,8 @@
 ---
 - name: Converge
   hosts: all
+  vars:
+    bastion_user_selection:
+      - normal
   roles:
     - role: users_bastion

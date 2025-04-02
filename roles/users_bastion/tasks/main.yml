@@ -1,20 +1,31 @@
 ---
-- name: Add user
+
+- name: Add bastion users
   ansible.builtin.user:
-    name: '{{ item.username }}'
+    name: "{{ item.username }}"
     shell: /bin/rbash
     groups: ''  # remove all the group memberships
+    password: '*'  # disable password
     append: false
-  loop: "{{ bastion_users }}"
+    state: present
+  when: item.username in bastion_user_selection and item.username != "root"  # we never want to make the root user a bastion user
+  loop: "{{ users_catalog | list }}"
 
+- name: Remove unneeded bastion users
+  ansible.builtin.user:
+    name: "{{ item.username }}"
+    state: absent
+    force: true  # ensure user is deleted if absent is used
+  when: item.username not in bastion_user_selection and item.username != "root"  # when the user has not been selected, remove it - except if it is root
+  loop: "{{ users_catalog | list }}"
 
 - name: Deploy SSH-Keys
   ansible.posix.authorized_key:
-    user: '{{ item.0.username }}'
-    key: "{{ item.1 }}"
-  with_subelements:
-    - "{{ bastion_users }}"
-    - "keys"
+    user: '{{ item.username }}'
+    key: "{{ item.ssh_keys | default([]) | list | join('\n') }}"
+    exclusive: true
+  when: item.username in bastion_user_selection
+  loop: "{{ users_catalog | list }}"
 
 - name: Create bin
   ansible.builtin.file:
@@ -23,7 +34,8 @@
     owner: '{{ item.username }}'
     mode: '0500'
     state: directory
-  loop: "{{ bastion_users }}"
+  when: item.username in bastion_user_selection
+  loop: "{{ users_catalog | list }}"
 
 - name: Lockdown PATH
   ansible.builtin.blockinfile:
@@ -36,4 +48,5 @@
     owner: '{{ item.username }}'
     create: true
     mode: '0440'
-  loop: "{{ bastion_users }}"
+  when: item.username in bastion_user_selection
+  loop: "{{ users_catalog | list }}"

@@ -1,0 +1,21 @@
+---
+
+- name: Verify
+  hosts: all
+  tasks:
+    - name: User normal exists
+      ansible.builtin.shell: cat /etc/passwd | grep normal
+    - name: User normal has key1
+      ansible.builtin.shell: cat /home/normal/.ssh/authorized_keys | grep fake1
+    - name: User normal has key2
+      ansible.builtin.shell: cat /home/normal/.ssh/authorized_keys | grep fake2
+    - name: User withpassword exists
+      ansible.builtin.shell: cat /etc/passwd | grep withpassword
+    - name: User withpassword has the expected password
+      ansible.builtin.shell: cat /etc/shadow | grep '$y$j9T$c4UAk5r4Mr9mNKtZawrqN/$7Lkn2tce1rWniuDup/fJ044fsz3y0erW0PFF17tISS0'
+    - name: User withpassword has no ssh key
+      ansible.builtin.command: test ! -f /home/withpassword/.ssh/authorized_keys
+    - name: User gnats has been removed
+      ansible.builtin.shell: cat /etc/passwd | grep -v gnats
+    - name: User root has not been removed, even though not selected
+      ansible.builtin.shell: cat /etc/passwd | grep root

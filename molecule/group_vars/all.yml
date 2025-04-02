@@ -1,27 +1,19 @@
 ---
-
-k3s_version: v1.32.1+k3s1
-
-nut:
-  client:
-    ups_ip: 10.10.10.10
-
-
 fail2ban:
   banaction: iptables
 
-proxmox:
-  api_host_access_limit: 10.1.0.0/24
-  hostname: myproxmox
-
-users:
-  - username: ubuntu
+users_catalog:
+  - username: root
+    shell: /bin/bash
+    ssh_keys:
+      - "ssh-ed25519 fake1 test1@local.local"
+  - username: normal
     shell: /bin/bash
     groups: sudo,adm
-    keys:
-      - 'ssh-ed25519 fake test@local.local'
+    ssh_keys:
+      - "ssh-ed25519 fake1 test1@local.local"
+      - "ssh-ed25519 fake2 test2@local.local"
+  - username: withpassword
+    password: $y$j9T$c4UAk5r4Mr9mNKtZawrqN/$7Lkn2tce1rWniuDup/fJ044fsz3y0erW0PFF17tISS0 #  hashed password "test"
+  - username: gnats
 
-bastion_users:
-  - username: myuser
-    keys:
-      - 'ssh-ed25519 fake test@local.local'

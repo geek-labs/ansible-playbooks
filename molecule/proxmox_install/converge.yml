@@ -1,5 +1,9 @@
 ---
 - name: Converge
   hosts: all
+  vars:
+    proxmox:
+      api_host_access_limit: 10.1.0.0/24
+      hostname: myproxmox
   roles:
     - role: proxmox_install

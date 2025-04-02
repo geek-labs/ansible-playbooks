@@ -1,0 +1,19 @@
+---
+
+- name: Verify
+  hosts: all
+  tasks:
+    - name: User normal exists
+      ansible.builtin.shell: cat /etc/passwd | grep normal
+    - name: User normal has the limitted rbash shell
+      ansible.builtin.shell: cat /etc/passwd | grep normal | grep rbash
+    - name: User normal has the limitted rbash shell
+      ansible.builtin.command: test -d /home/normal/bin
+    - name: User normal has a locked down bashrc
+      ansible.builtin.command: test -f /home/normal/.bashrc
+    - name: User normal has a locked down bashrc
+      ansible.builtin.shell: cat /home/normal/.bashrc | grep "PATH=/home/normal/bin"
+    - name: User withpassword has not been created since it has not been selected
+      ansible.builtin.shell: cat /etc/passwd | grep -v withpassword
+    - name: User root has not been removed, even though not selected
+      ansible.builtin.shell: cat /etc/passwd | grep root
