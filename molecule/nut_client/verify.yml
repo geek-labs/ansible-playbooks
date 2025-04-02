@@ -1,0 +1,8 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Nut config has been deployed
+      ansible.builtin.command: test -f /etc/nut/nut.conf
+    - name: Nut upsmon config has been deployed
+      ansible.builtin.command: test -f /etc/nut/upsmon.conf
