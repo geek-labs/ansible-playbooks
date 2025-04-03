@@ -16,3 +16,5 @@
       ansible.builtin.command: test -d /mnt/backup_local
     - name: No pve in aot sources
       ansible.builtin.shell: test ! -f /etc/apt/sources.list || cat /etc/apt/sources.list | grep -v pve
+    #- name: Api user has been created
+    #  ansible.builtin.shell: pveum user list | grep terraform-prov@pve

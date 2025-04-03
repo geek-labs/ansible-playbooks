@@ -1,0 +1,72 @@
+---
+- name: Install basic packages
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 0
+    pkg:
+      - gpg
+      - gnupg2
+      - dirmngr
+      - apt-transport-https
+      - ca-certificates
+      - curl
+
+- name: Add microsoft debian repos
+  ansible.builtin.apt:
+    deb: https://packages.microsoft.com/config/{{ ansible_distribution|lower }}/{{ ansible_distribution_major_version }}/packages-microsoft-prod.deb
+
+#- name: Install proxmox gpg key
+#  ansible.builtin.apt_key:
+#    url: https://packages.microsoft.com/keys/microsoft.asc
+#    keyring: /etc/apt/trusted.gpg.d/microsoft-prod.gpg
+#
+## needed for the agent
+#- name: Add update repository
+#  ansible.builtin.apt_repository:
+#    repo: deb https://packages.microsoft.com/{{ ansible_distribution }}/{{ ansible_distribution_major_version }}/prod {{ ansible_distribution_release }} main
+#    state: present
+#    filename: updates
+#    update_cache: false
+
+- name: Install microsoft agent basics
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 0
+    pkg:
+      - dotnet-runtime-6.0
+      - gosu  # we will need this to run our agents
+
+
+# tools we need when we run jobs on the agent
+- name: Install ci tools for use
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 0
+    pkg:
+      - make
+      - m4
+      - curl
+
+- name: Install ci tools for ubuntu
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 0
+    pkg:
+      - cgroup-lite  # we will use cgroup to limit resources
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Install ci tools for debian
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 0
+    pkg:
+      - cgroup-tools  # we will use cgroup to limit resources
+  when: ansible_distribution == 'Debian'
+
+- name: Include docker
+  ansible.builtin.include_tasks: docker.yml
+- name: Include agent_setup_toolbox
+  ansible.builtin.include_tasks: agent_setup_toolbox.yml
+- name: Include regular cleanup tasks
+  ansible.builtin.include_tasks: regular_cleanup_tasks.yml
+

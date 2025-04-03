@@ -30,11 +30,12 @@
   notify: 'restart multipathd service'
 
 - name: Check k3s version
-  ansible.builtin.shell: "k3s --version | grep '{{ k3s_version }}'"
-  register: k3s_version_matches
-  ignore_errors: true
-  changed_when: false
-  no_log: true
+  ansible.builtin.shell: |
+    set -o pipefail
+    k3s --version | grep '{{ k3s_version }}'
+  register: k3s_version_already_installed
+  failed_when: "k3s_version_already_installed.rc > 1"  # we only fail if the exit code is not 0 or 1 (even 1 is expected)
+  changed_when: "k3s_version_already_installed.rc == 1"
 
 ## install k3s
 - name: Install k3s  # noqa: no-changed-when
@@ -52,7 +53,7 @@
       --disable traefik \
       --disable local-storage \
       --disable metrics-server" sh -
-  when: k3s_version_matches is failed
+  changed_when: "k3s_version_already_installed.rc == 1"
 
 - name: Allow sudoer access to k3s config
   ansible.builtin.file:

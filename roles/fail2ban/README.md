@@ -1,7 +1,6 @@
 ## Variables
 
 ```yaml
-fail2ban:
-  banaction: iptables
+fail2ban_banaction: iptables
 ```
 

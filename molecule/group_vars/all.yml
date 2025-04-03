@@ -1,6 +1,5 @@
 ---
-fail2ban:
-  banaction: iptables
+fail2ban_banaction: iptables
 
 users_catalog:
   - username: root

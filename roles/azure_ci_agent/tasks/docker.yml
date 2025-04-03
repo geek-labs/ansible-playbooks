@@ -1,0 +1,23 @@
+
+- name: Add docker role
+  ansible.builtin.include_role:
+    name: geerlingguy.docker
+
+# tools we need when we run jobs on the agent
+- name: Install docker tools
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 0
+    pkg:
+      - docker-buildx-plugin
+  vars:
+    docker_install_compose: true
+
+- name: Create docker config
+  ansible.builtin.template:
+    src: templates/docker.json.j2
+    dest: '/etc/docker/docker.json'
+    owner: root
+    group: root
+    mode: '0444'
+  notify: 'restart docker service'

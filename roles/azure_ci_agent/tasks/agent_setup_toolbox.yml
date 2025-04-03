@@ -1,0 +1,50 @@
+---
+
+- name: Create agent setup toolsbox folder
+  ansible.builtin.file:
+    path: "/opt/azure-agent-setup"
+    recurse: false
+    owner: 'root'
+    group: 'root'
+    mode: '0500'
+    state: directory
+
+- name: Create agent-run-once-forever.sh
+  ansible.builtin.copy:
+    src: files/agent-run-once-forever.sh
+    dest: '/opt/azure-agent-setup/agent-run-once-forever.sh'
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Create agent-setup.sh
+  ansible.builtin.copy:
+    src: files/agent-setup.sh
+    dest: '/opt/azure-agent-setup/agent-setup.sh'
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Create agent-uninstall.sh
+  ansible.builtin.copy:
+    src: files/agent-uninstall.sh
+    dest: '/opt/azure-agent-setup/agent-uninstall.sh'
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Create batch-setup.sh
+  ansible.builtin.copy:
+    src: files/batch-setup.sh
+    dest: '/opt/azure-agent-setup/batch-setup.sh'
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Create batch-uninstall.sh
+  ansible.builtin.copy:
+    src: files/batch-uninstall.sh
+    dest: '/opt/azure-agent-setup/batch-uninstall.sh'
+    owner: root
+    group: root
+    mode: '0700'

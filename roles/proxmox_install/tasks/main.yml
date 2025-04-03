@@ -5,7 +5,7 @@
 
 - name: Set a hostname for our proxmox
   ansible.builtin.hostname:
-    name: "{{ proxmox.hostname }}"
+    name: "{{ proxmox_hostname }}"
     use: "debian"
   # this will not within a container - which we run our tests in
   when: not ansible_module_running_in_container
@@ -24,7 +24,7 @@
   args:
     executable: /usr/bin/bash
   register: pve_exists_in_apt_source
-  failed_when: "pve_exists_in_apt_source.rc > 1"
+  failed_when: "pve_exists_in_apt_source.rc > 1"  # we only fail if the exit code is not 0 or 1 (even 1 is expected)
   changed_when: "pve_exists_in_apt_source.rc == 0"
 
 # if installed via the iso, the pve sources are in /etc/apt/sources.list,
@@ -104,7 +104,7 @@
     value: '1'
     sysctl_set: true
 
-- name: Block PVE api access only for allowed hosts
+- name: Allow PVE api access only for allowed hosts
   ansible.builtin.template:
     src: templates/pveproxy.j2
     dest: '/etc/default/pveproxy'
@@ -113,9 +113,21 @@
     mode: '0444'
   notify: "restart pveproxy service"
 
+- name: Enable pveproxy
+  ansible.builtin.systemd_service:
+    name: pveproxy.service
+    enabled: true
+    daemon_reload: true
+
+- name: Api user
+  ansible.builtin.include_tasks: api_user.yml
+  when: proxmox_terraform_api_key | default('') != ""
+
 - name: Include backups
   ansible.builtin.include_tasks: backups.yml
 - name: Include fail2ban
   ansible.builtin.include_tasks: fail2ban.yml
 - name: Include unattended_updates
   ansible.builtin.include_tasks: unattended_updates.yml
+
+
