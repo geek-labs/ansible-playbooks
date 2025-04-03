@@ -1,8 +1,0 @@
----
-
-- name: Register agent with out ci
-  ansible.builtin.shell: |
-    sudo bash -c -l 'cd /opt/azure-agent-setup && sudo ./batch-setup.sh {{ auzre_ci_agent_index }} 1 {{ auzre_ci_agent_pat }} Default 1 1400'
-  args:
-    executable: /bin/bash
-  changed_when:

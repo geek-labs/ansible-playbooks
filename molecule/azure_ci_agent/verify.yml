@@ -1,8 +1,0 @@
----
-- name: Verify
-  hosts: all
-  tasks:
-    - name: Installed Microsoft toolkit
-      ansible.builtin.command: dpkg --list | grep packages-microsoft-prod
-    - name: Toolkit installed
-      ansible.builtin.command: test -f /opt/azure-agent-setup/agent-run-once-forever.sh
