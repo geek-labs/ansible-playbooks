@@ -5,5 +5,10 @@
     proxmox_api_host_access_limit: 10.1.0.0/24
     proxmox_hostname: myproxmox
     #proxmox_terraform_api_key: "very secret"
+  pre_tasks:
+    - name: Skip config
+      ansible.builtin.shell: |
+        mkdir -p /etc/kw-proxmox
+        touch /etc/kw-proxmox/.ansible_configured
   roles:
     - role: proxmox_install

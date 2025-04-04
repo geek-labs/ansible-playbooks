@@ -1,0 +1,11 @@
+---
+# see https://pve.proxmox.com/pve-docs/chapter-pvesm.html
+- name: Configure pve
+  ansible.builtin.shell: |
+    set -e
+    pvesm set local --content iso,images,images,vztmpl,snippets,import,rootdir
+    pvesm add dir backup_local --path /mnt/backup_local
+    mkdir -p /etc/kw-proxmox
+    touch /etc/kw-proxmox/.ansible_configured
+  args:
+    creates: /etc/kw-proxmox/.ansible_configured

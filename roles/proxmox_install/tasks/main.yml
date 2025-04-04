@@ -119,9 +119,12 @@
     enabled: true
     daemon_reload: true
 
-- name: Api user
-  ansible.builtin.include_tasks: api_user.yml
-  when: proxmox_terraform_api_key | default('') != ""
+- name: Terraform ssh user
+  ansible.builtin.include_tasks: terraform.yml
+  when: proxmox_terraform_enable | default(False)
+- name: Admin user
+  ansible.builtin.include_tasks: admin_user.yml
+  when: proxmox_admin_password | default('') != ""
 
 - name: Include backups
   ansible.builtin.include_tasks: backups.yml
@@ -129,5 +132,8 @@
   ansible.builtin.include_tasks: fail2ban.yml
 - name: Include unattended_updates
   ansible.builtin.include_tasks: unattended_updates.yml
+- name: Include pve config
+  ansible.builtin.include_tasks: config.yml
+
 
 

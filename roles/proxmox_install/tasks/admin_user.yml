@@ -1,0 +1,18 @@
+---
+- name: Admin user exists
+  ansible.builtin.shell: |
+    set -o pipefail
+    pveum user list | grep admin
+  args:
+    executable: /usr/bin/bash
+  register: proxmox_admin_user_exists
+  changed_when: "proxmox_admin_user_exists.rc == 1"
+  failed_when: "proxmox_admin_user_exists.rc > 1"  # we only fail if the exit code is not 0 or 1 (even 1 is expected)
+  when: proxmox_admin_password | default('') != ""
+
+- name: Create admin user
+  ansible.builtin.shell: |
+    set -e
+    pveum user add admin@pve --password '{{ proxmox_admin_password }}'
+  when: proxmox_admin_password | default('') != "" and proxmox_admin_user_exists.rc == 1
+  changed_when: proxmox_admin_user_exists.rc == 1

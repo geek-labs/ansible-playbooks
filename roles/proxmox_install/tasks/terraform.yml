@@ -1,0 +1,51 @@
+---
+
+# terraform api key
+- name: Api user exists
+  ansible.builtin.shell: |
+    set -o pipefail
+    pveum user list | grep terraform-prov@pve
+  args:
+    executable: /usr/bin/bash
+  register: proxmox_api_user_exists
+  changed_when: "proxmox_api_user_exists.rc == 1"
+  failed_when: "proxmox_api_user_exists.rc > 1"  # we only fail if the exit code is not 0 or 1 (even 1 is expected)
+  when: proxmox_terraform_api_key | default('') != ""
+
+- name: Create api user
+  ansible.builtin.shell: |
+    set -e
+    pveum role add TerraformProv -privs "Datastore.Allocate,Datastore.AllocateSpace,Datastore.AllocateTemplate,Datastore.Audit,Pool.Allocate,SDN.Allocate,SDN.Use,Sys.Audit,Sys.Console,Sys.Modify,VM.Allocate,VM.Audit,VM.Clone,VM.Config.CDROM,VM.Config.CPU,VM.Config.Cloudinit,VM.Config.Disk,VM.Config.HWType,VM.Config.Memory,VM.Config.Network,VM.Config.Options,VM.Migrate,VM.Monitor,VM.PowerMgmt"
+    pveum user add terraform-prov@pve --password {{ proxmox_terraform_api_key }}
+    pveum aclmod / -user terraform-prov@pve -role TerraformProv
+  when: proxmox_terraform_api_key | default('') != "" and proxmox_api_user_exists.rc == 1
+  changed_when: proxmox_api_user_exists.rc == 1
+
+
+#### terraform ssh user
+- name: Add terraform ssh users
+  ansible.builtin.user:
+    name: "terraform"
+    shell: /bin/bash
+    groups: sudo,adm
+    append: true
+    password: '*'
+    state: present
+
+- name: Deploy SSH-Keys for terraform
+  ansible.posix.authorized_key:
+    user: terraform
+    key: "{{ proxmox_terraform_ssh_keys | list | join('\n') }}"
+    exclusive: true
+
+- name: Allow terraform to operate pve commands
+  community.general.sudoers:
+    name: terraform-proxmox
+    user: terraform
+    runas: root
+    host: ALL
+    nopassword: true
+    commands:
+      - /sbin/pvesm
+      - /sbin/qm
+      - /usr/bin/tee /var/lib/vz/*

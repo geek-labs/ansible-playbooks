@@ -33,6 +33,8 @@
   ansible.builtin.shell: |
     set -o pipefail
     k3s --version | grep '{{ k3s_version }}'
+  args:
+    executable: /usr/bin/bash
   register: k3s_version_already_installed
   failed_when: "k3s_version_already_installed.rc > 1"  # we only fail if the exit code is not 0 or 1 (even 1 is expected)
   changed_when: "k3s_version_already_installed.rc == 1"
@@ -53,6 +55,7 @@
       --disable traefik \
       --disable local-storage \
       --disable metrics-server" sh -
+  when: k3s_version_already_installed.rc == 1
   changed_when: "k3s_version_already_installed.rc == 1"
 
 - name: Allow sudoer access to k3s config
