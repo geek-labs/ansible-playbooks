@@ -10,5 +10,7 @@
       ansible.builtin.shell: |
         mkdir -p /etc/kw-proxmox
         touch /etc/kw-proxmox/.ansible_configured
+      args:
+        creates: /etc/kw-proxmox/.ansible_configured
   roles:
     - role: proxmox_install
