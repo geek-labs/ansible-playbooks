@@ -7,6 +7,12 @@
     pkg:
       - openssh-server
 
+- name: Start sshd service
+  ansible.builtin.systemd_service:
+    name: ssh.service
+    enabled: true
+    daemon_reload: true
+
 - name: SSH server config
   ansible.builtin.copy:
     src: files/sshd_config
