@@ -2,8 +2,6 @@
 - name: Converge
   hosts: all
   vars:
-    nut:
-      client:
-        ups_ip: 10.10.10.10
+    nut_client_ups_ip: 10.10.10.10
   roles:
     - role: nut_client

@@ -1,6 +1,6 @@
 RUN_AS_USER root
 
-MONITOR ups@{{ nut.client.ups_ip }} 1 monuser secret slave
+MONITOR ups@{{ nut_client_ups_ip }} 1 monuser secret slave
 
 MINSUPPLIES 1
 SHUTDOWNCMD "/sbin/shutdown -h"
