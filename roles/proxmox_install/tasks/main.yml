@@ -126,8 +126,8 @@
   ansible.builtin.include_tasks: admin_user.yml
   when: proxmox_admin_password | default('') != ""
 
-- name: Include backups
-  ansible.builtin.include_tasks: backups.yml
+- name: Include storage config
+  ansible.builtin.include_tasks: storage.yml
   when: proxmox_storage_setup | default(False)
 - name: Include fail2ban
   ansible.builtin.include_tasks: fail2ban.yml
