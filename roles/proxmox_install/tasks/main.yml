@@ -128,11 +128,12 @@
 
 - name: Include backups
   ansible.builtin.include_tasks: backups.yml
+  when: proxmox_storage_setup | default(False)
 - name: Include fail2ban
   ansible.builtin.include_tasks: fail2ban.yml
 - name: Include unattended_updates
   ansible.builtin.include_tasks: unattended_updates.yml
-- name: Include pve config
+- name: Include config
   ansible.builtin.include_tasks: config.yml
 
 

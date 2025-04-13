@@ -28,3 +28,13 @@
     group: 'root'
     mode: '0755'
     state: directory
+
+- name: Configure pve
+  ansible.builtin.shell: |
+    set -e
+    pvesm set local --content iso,images,images,vztmpl,snippets,import,rootdir
+    pvesm add dir backup_local --path /mnt/backup_local
+    mkdir -p /etc/ansible-proxmox
+    touch /etc/ansible-proxmox/.storage_configured
+  args:
+    creates: /etc/ansible-proxmox/.storage_configured
