@@ -10,8 +10,8 @@
     - name: Skip config
       ansible.builtin.shell: |
         mkdir -p /etc/kw-proxmox
-        touch /etc/kw-proxmox/.ansible_configured
+        touch /etc/ansible-proxmox/.ansible_configured
       args:
-        creates: /etc/kw-proxmox/.ansible_configured
+        creates: /etc/ansible-proxmox/.ansible_configured
   roles:
     - role: proxmox_install
