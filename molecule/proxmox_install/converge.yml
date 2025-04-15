@@ -9,7 +9,7 @@
   pre_tasks:
     - name: Skip config
       ansible.builtin.shell: |
-        mkdir -p /etc/kw-proxmox
+        mkdir -p /etc/ansible-proxmox
         touch /etc/ansible-proxmox/.ansible_configured
       args:
         creates: /etc/ansible-proxmox/.ansible_configured
