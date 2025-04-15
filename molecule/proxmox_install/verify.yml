@@ -10,10 +10,6 @@
       ansible.builtin.command: test -f /etc/fail2ban/filter.d/proxmox.conf
     - name: proxmox api secured
       ansible.builtin.command: test -f /etc/default/pveproxy
-    - name: backup folder exists
-      ansible.builtin.command: test -d /mnt/backup
-    - name: backup local folder exists
-      ansible.builtin.command: test -d /mnt/backup_local
     - name: No pve in aot sources
       ansible.builtin.shell: test ! -f /etc/apt/sources.list || cat /etc/apt/sources.list | grep -v pve
     #- name: Api user has been created
