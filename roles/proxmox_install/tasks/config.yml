@@ -1,3 +1,5 @@
+---
+
 - name: Configure pve
   ansible.builtin.shell: |
     set -e

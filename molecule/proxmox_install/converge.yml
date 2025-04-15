@@ -4,7 +4,7 @@
   vars:
     proxmox_api_host_access_limit: 10.1.0.0/24
     proxmox_hostname: myproxmox
-    proxmox_storage_setup: true
+    #proxmox_storage_setup: true
     #proxmox_terraform_api_key: "very secret"
   pre_tasks:
     - name: Skip config
