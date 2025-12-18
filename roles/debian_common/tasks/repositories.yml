@@ -30,7 +30,7 @@
   ansible.builtin.deb822_repository:
     name: security
     types: deb
-    uris: http://ftp.uni-stuttgart.de/debian
+    uris: http://security.debian.org/debian-security
     components:
       - main
     suites: "{{ ansible_distribution_release }}-security"
