@@ -98,6 +98,7 @@
     name: net.ipv6.conf.all.disable_ipv6
     value: '1'
     sysctl_set: true
+    sysctl_file: /etc/sysctl.d/ip6forward.conf
 
 # we need this to route traffic to our VMs for the outer nets
 - name: Enable ip forward
@@ -105,6 +106,7 @@
     name: net.ipv4.ip_forward
     value: '1'
     sysctl_set: true
+    sysctl_file: /etc/sysctl.d/ip4forward.conf
 
 - name: Allow PVE api access only for allowed hosts
   ansible.builtin.template:
