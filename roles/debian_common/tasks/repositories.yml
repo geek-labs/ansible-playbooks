@@ -23,7 +23,7 @@
       - contrib
       - non-free
       - non-free-firmware
-    suites: {{ ansible_distribution_release }}-updates
+    suites: "{{ ansible_distribution_release }}-updates"
     state: present
 
 - name: Add security repository
@@ -33,7 +33,7 @@
     uris: http://ftp.uni-stuttgart.de/debian
     components:
       - main
-    suites: {{ ansible_distribution_release }}-security
+    suites: "{{ ansible_distribution_release }}-security"
     state: present
 
 - name: Override sources.list with blank
