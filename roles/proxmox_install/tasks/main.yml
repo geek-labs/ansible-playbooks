@@ -59,7 +59,7 @@
     components:
       - pve-no-subscription
     suites: "{{ ansible_distribution_release }}"
-    signed_by: /usr/share/keyrings/proxmox-archive-keyring.gpg
+    signed_by: "https://enterprise.proxmox.com/debian/proxmox-release-{{ ansible_distribution_release }}.gpg"
     state: present
 
 - name: Install proxmox
