@@ -10,7 +10,7 @@
       - contrib
       - non-free
       - non-free-firmware
-    suites: {{ ansible_distribution_release }}
+    suites: "{{ ansible_distribution_release }}"
     state: present
 
 - name: Add update repository
