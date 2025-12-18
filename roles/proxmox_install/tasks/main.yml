@@ -51,7 +51,14 @@
       - lsb-release
       - intel-microcode
 
-- name: Add security repository
+- name: Install proxmox gpg key
+  ansible.builtin.get_url:
+    url: "https://enterprise.proxmox.com/debian/proxmox-release-{{ ansible_distribution_release }}.gpg"
+    dest: "/etc/apt/trusted.gpg.d/proxmox-release-{{ ansible_distribution_release }}.gpg"
+    mode: '0644'
+    force: true
+
+- name: Add pve repository
   ansible.builtin.deb822_repository:
     name: pve-non-enterprise
     types: deb
@@ -59,7 +66,7 @@
     components:
       - pve-no-subscription
     suites: "{{ ansible_distribution_release }}"
-    signed_by: "https://enterprise.proxmox.com/debian/proxmox-release-{{ ansible_distribution_release }}.gpg"
+    signed_by: "/etc/apt/trusted.gpg.d/proxmox-release-{{ ansible_distribution_release }}.gpg"
     state: present
 
 - name: Install proxmox
