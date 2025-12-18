@@ -34,6 +34,13 @@
   when: "pve_exists_in_apt_source.rc == 0"
   changed_when: "pve_exists_in_apt_source.rc == 0"
 
+- name: Install proxmox gpg key
+  ansible.builtin.get_url:
+    url: https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg
+    dest: /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg
+    mode: '0644'
+    force: true
+
 - name: Install basic packages
   ansible.builtin.apt:
     update_cache: true
@@ -58,11 +65,6 @@
     group: root
     dest: '/etc/apt/sources.list.d/pve-non-enterprise.list'
     mode: '0644'
-
-- name: Install proxmox gpg key
-  ansible.builtin.apt_key:
-    url: https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg
-    keyring: /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg
 
 - name: Install proxmox
   ansible.builtin.apt:
