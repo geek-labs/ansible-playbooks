@@ -47,11 +47,29 @@
     group: 'root'
     mode: '0644'
 
+
 ## cleanup
-- name: Remove hetzner security list
+- name: Remove debian sources
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/debian.sources
+    state: absent
+- name: Remove hetzner sources legacy
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/hetzner-mirror.sources
+    state: absent
+- name: Remove hetzner sources
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/hetzner-mirror.sources
+    state: absent
+- name: Remove hetzner security list legacy
   ansible.builtin.file:
     path: /etc/apt/sources.list.d/hetzner-security-updates.list
     state: absent
+- name: Remove hetzner security list
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/hetzner-security-mirror.sources
+    state: absent
+
 
 - name: Remove docker default list
   ansible.builtin.file:
