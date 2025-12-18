@@ -2,40 +2,40 @@
 
 - name: Add stable repository
   ansible.builtin.deb822_repository:
-    repo: deb http://ftp.uni-stuttgart.de/debian {{ ansible_distribution_release }} main contrib non-free non-free-firmware
+    name: stable
+    types: deb
+    uris: http://ftp.uni-stuttgart.de/debian
+    components:
+      - main
+      - contrib
+      - non-free
+      - non-free-firmware
+    suites: {{ ansible_distribution_release }}
     state: present
-    filename: stable
-    update_cache: false
 
 - name: Add update repository
   ansible.builtin.deb822_repository:
-    repo: deb http://ftp.uni-stuttgart.de/debian {{ ansible_distribution_release }}-updates main contrib non-free non-free-firmware
+    name: updates
+    types: deb
+    uris: http://ftp.uni-stuttgart.de/debian
+    components:
+      - main
+      - contrib
+      - non-free
+      - non-free-firmware
+    suites: {{ ansible_distribution_release }}-updates
     state: present
-    filename: updates
-    update_cache: false
-
-# remove old entries
-- name: Remove old stable repository
-  ansible.builtin.deb822_repository:
-    repo: deb http://ftp2.de.debian.org/debian {{ ansible_distribution_release }} main contrib non-free non-free-firmware
-    state: absent
-    filename: stable
-    update_cache: false
-
-# remove old entries
-- name: Remove old update repository
-  ansible.builtin.deb822_repository:
-    repo: deb http://ftp2.de.debian.org/debian {{ ansible_distribution_release }}-updates main contrib non-free non-free-firmware
-    state: absent
-    filename: updates
-    update_cache: false
 
 - name: Add security repository
   ansible.builtin.deb822_repository:
-    repo: deb http://security.debian.org/debian-security {{ ansible_distribution_release }}-security main
+    name: updates
+    types: deb
+    uris: http://ftp.uni-stuttgart.de/debian
+    components:
+      - main
+    suites: {{ ansible_distribution_release }}-security
     state: present
-    filename: security
-    update_cache: false
+
 - name: Override sources.list with blank
   ansible.builtin.copy:
     src: 'files/sources.list'
