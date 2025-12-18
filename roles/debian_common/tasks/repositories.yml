@@ -28,7 +28,7 @@
 
 - name: Add security repository
   ansible.builtin.deb822_repository:
-    name: updates
+    name: security
     types: deb
     uris: http://ftp.uni-stuttgart.de/debian
     components:
@@ -61,7 +61,7 @@
     state: absent
 - name: Remove legacy update list
   ansible.builtin.file:
-    path: /etc/apt/sources.list.d/update.list
+    path: /etc/apt/sources.list.d/updates.list
     state: absent
 - name: Remove legacy update list
   ansible.builtin.file:
