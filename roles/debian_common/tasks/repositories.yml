@@ -25,7 +25,7 @@
       - non-free
       - non-free-firmware
     suites: "{{ ansible_distribution_release }}-updates"
-    signed_by: "/usr/share/keyrings/debian-archive-{{ ansible_distribution_release }}-updates.pgp"
+    signed_by: "/usr/share/keyrings/debian-archive-{{ ansible_distribution_release }}-automatic.pgp"
     state: present
 
 - name: Add security repository
