@@ -56,7 +56,7 @@
       - bridge-utils
       - sudo
       - lsb-release
-
+      - intel-microcode
 
 - name: Deploy pve apt sources
   ansible.builtin.copy:
