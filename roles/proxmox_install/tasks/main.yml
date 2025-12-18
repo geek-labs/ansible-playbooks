@@ -58,13 +58,16 @@
       - lsb-release
       - intel-microcode
 
-- name: Deploy pve apt sources
-  ansible.builtin.template:
-    src: templates/pve-non-enterprise.sources.j2
-    owner: root
-    group: root
-    dest: '/etc/apt/sources.list.d/pve-non-enterprise.sources'
-    mode: '0644'
+- name: Add security repository
+  ansible.builtin.deb822_repository:
+    name: pve-non-enterprise
+    types: deb
+    uris: http://download.proxmox.com/debian/pve/
+    components:
+      - pve-no-subscription
+    suites: {{ ansible_distribution_release }}
+    signed_by: /usr/share/keyrings/proxmox-archive-keyring.gpg
+    state: present
 
 - name: Install proxmox
   ansible.builtin.apt:
