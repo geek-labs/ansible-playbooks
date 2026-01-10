@@ -4,9 +4,12 @@
     update_cache: true
     cache_valid_time: 3600
     pkg:
-      - multipath-tools
       - curl
-
+      # needed for longhorn
+      - open-iscsi
+      - nfs-common
+      - cryptsetup
+      - dmsetup
 # uninstall firewall
 - name: Remote ufw firewall
   ansible.builtin.apt:
@@ -21,13 +24,13 @@
     dest: '/etc/security/limits.d/k8s.conf'
     mode: '0644'
 
-## fix multipathd
-- name: Multipathd config
-  ansible.builtin.copy:
-    src: files/multipath.conf
-    dest: '/etc/multipath.conf'
-    mode: '0644'
-  notify: 'restart multipathd service'
+- name: Remove multipathd
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      multipath-tools
+    state: absent
 
 - name: Check k3s version
   ansible.builtin.shell: |
@@ -110,3 +113,12 @@
     src: files/k3s-full-uninstall.sh
     dest: '/root/k3s-full-uninstall.sh'
     mode: '0700'
+
+- name: Deploy k3s registries.yaml
+  ansible.builtin.template:
+    src: templates/k3s-registries.yaml.j2
+    dest: '/etc/rancher/k3s/registries.yaml'
+    owner: root
+    group: sudo
+    mode: '0640'
+  when: k3s_docker_registry1_domain is defined

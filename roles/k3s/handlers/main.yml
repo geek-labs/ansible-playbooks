@@ -1,7 +1,1 @@
 ---
-- name: Restart multipathd service
-  ansible.builtin.systemd_service:
-    name: multipathd
-    enabled: true
-    state: restarted
-  listen: 'restart multipathd service'
