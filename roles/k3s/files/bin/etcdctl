@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export CRI_CONFIG_FILE=/var/lib/rancher/k3s/agent/etc/crictl.yaml
+etcdcontainer=$(/usr/local/bin/crictl ps --label io.kubernetes.container.name=etcd --quiet)
+/usr/local/bin/crictl exec $etcdcontainer etcdctl --cert /var/lib/rancher/rke2/server/tls/etcd/server-client.crt --key /var/lib/rancher/rke2/server/tls/etcd/server-client.key --cacert /var/lib/rancher/rke2/server/tls/etcd/server-ca.crt "$@"

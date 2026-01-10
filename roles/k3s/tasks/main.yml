@@ -80,14 +80,15 @@
     enabled: true
     daemon_reload: true
 
+
 #### calicoctl
 # https://docs.tigera.io/calico/latest/operations/calicoctl/install
-# FIXME: we might want to have the version configurable?
 - name: Download calicoctl
   ansible.builtin.get_url:
-    url: https://github.com/projectcalico/calico/releases/download/v3.28.0/calicoctl-linux-amd64
-    dest: /usr/local/bin/calicoctl
-    checksum: sha256:4ea270699e67ca29e5533ddb0a68d370cb0005475796c7e841f83047da6297b6
+    url: https://github.com/projectcalico/calico/releases/download/v3.31.3/calicoctl-linux-amd64
+    dest: /usr/local/bin/calicoctl-bin
+    # curl -L https://github.com/projectcalico/calico/releases/download/v3.31.3/calicoctl-linux-amd64 | sha256sum
+    checksum: sha256:dc920efee0045d352780c73cfdd3f6fbd6eab9fdb0675897095c755715a8fc8d
     mode: '0755'
     force: false
 
@@ -104,9 +105,27 @@
 
 - name: Place cluster config so calicoctl can use it
   ansible.builtin.file:
-    src: /etc/rancher/k3s/k3s.yaml
+    src: /etc/rancher/k3s/config.yaml
     dest: /root/.kube/config
     state: link
+
+### longhornctl
+
+- name: Download longhornctl
+  ansible.builtin.get_url:
+    url: https://github.com/longhorn/cli/releases/download/v1.10.1/longhornctl-linux-amd64
+    dest: /usr/local/bin/longhornctl-bin
+    # curl -L https://github.com/longhorn/cli/releases/download/v1.10.1/longhornctl-linux-amd64 | sha256sum
+    checksum: sha256:955c7085b29594a1310ffc9f2ad35bc566a45ab664ccb042667d2129dbf6a3cd
+    mode: '0755'
+    force: false
+  # this only works on servers due to the kubeconf
+
+- name: Enable dm_crypt kernel modul for longhorn on agents
+  community.general.modprobe:
+    name: dm_crypt
+    state: present
+    persistent: present
 
 - name: K3s uninstall tools
   ansible.builtin.copy:
@@ -122,3 +141,43 @@
     group: sudo
     mode: '0640'
   when: k3s_docker_registry1_domain is defined
+
+- name: crictl wrapper
+  ansible.builtin.copy:
+    src: files/bin/crictl
+    dest: '/usr/local/bin/crictl'
+    mode: '0770'
+
+- name: etcdctl wrapper
+  ansible.builtin.copy:
+    src: files/bin/etcdctl
+    dest: '/usr/local/bin/etcdctl'
+    mode: '0770'
+
+- name: kubectl wrapper
+  ansible.builtin.copy:
+    src: files/bin/kubectl
+    dest: '/usr/local/bin/kubectl'
+    mode: '0770'
+  # this only works on servers due to the kubeconf
+
+- name: etcdlogs wrapper
+  ansible.builtin.copy:
+    src: files/bin/etcdlogs
+    dest: '/usr/local/bin/etcdlogs'
+    mode: '0770'
+  # this only works on servers
+
+- name: calicoctl wrapper
+  ansible.builtin.copy:
+    src: files/bin/calicoctl
+    dest: '/usr/local/bin/calicoctl'
+    mode: '0770'
+  # this only works on servers due to the kubeconf
+
+- name: kubeapilogs wrapper
+  ansible.builtin.copy:
+    src: files/bin/kubeapilogs
+    dest: '/usr/local/bin/kubeapilogs'
+    mode: '0770'
+  # this only works on servers
