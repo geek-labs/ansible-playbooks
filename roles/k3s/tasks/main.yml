@@ -142,12 +142,6 @@
     mode: '0640'
   when: k3s_docker_registry1_domain is defined
 
-- name: crictl wrapper
-  ansible.builtin.copy:
-    src: files/bin/crictl
-    dest: '/usr/local/bin/crictl'
-    mode: '0770'
-
 - name: etcdctl wrapper
   ansible.builtin.copy:
     src: files/bin/etcdctl
