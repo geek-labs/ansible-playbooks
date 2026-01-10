@@ -148,13 +148,6 @@
     dest: '/usr/local/bin/etcdctl'
     mode: '0770'
 
-- name: kubectl wrapper
-  ansible.builtin.copy:
-    src: files/bin/kubectl
-    dest: '/usr/local/bin/kubectl'
-    mode: '0770'
-  # this only works on servers due to the kubeconf
-
 - name: etcdlogs wrapper
   ansible.builtin.copy:
     src: files/bin/etcdlogs
