@@ -11,7 +11,7 @@
       - non-free
       - non-free-firmware
     suites: "{{ ansible_distribution_release }}"
-    signed_by: "/usr/share/keyrings/debian-archive-{{ ansible_distribution_release }}-stable.pgp"
+    signed_by: "/usr/share/keyrings/debian-archive-keyring.gpg"
     state: present
 
 - name: Add update repository
@@ -25,7 +25,7 @@
       - non-free
       - non-free-firmware
     suites: "{{ ansible_distribution_release }}-updates"
-    signed_by: "/usr/share/keyrings/debian-archive-{{ ansible_distribution_release }}-automatic.pgp"
+    signed_by: "/usr/share/keyrings/debian-archive-keyring.gpg"
     state: present
 
 - name: Add security repository
@@ -36,7 +36,7 @@
     components:
       - main
     suites: "{{ ansible_distribution_release }}-security"
-    signed_by: "/usr/share/keyrings/debian-archive-{{ ansible_distribution_release }}-security-automatic.pgp"
+    signed_by: "/usr/share/keyrings/debian-archive-keyring.gpg"
     state: present
 
 - name: Override sources.list with blank

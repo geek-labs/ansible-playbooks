@@ -19,24 +19,24 @@
     src: 'files/unattended-upgrades/50unattended-upgrades'
     dest: '/etc/apt/apt.conf.d/50unattended-upgrades'
     mode: '0644'
-  register: unattended_upgrades_settings_set
+  register: debian_common_unattended_upgrades_settings_set
 
 - name: Unattended-upgrades auto-upgrades
   ansible.builtin.copy:
     src: 'files/unattended-upgrades/20auto-upgrades'
     dest: '/etc/apt/apt.conf.d/20auto-upgrades'
     mode: '0644'
-  register: unattended_upgrades_config_set
+  register: debian_common_unattended_upgrades_config_set
 
 - name: Dpkg reconfigure unattended-upgrades  # noqa: no-changed-when
   ansible.builtin.command:
     cmd: dpkg-reconfigure -f noninteractive unattended-upgrades
-  when: unattended_upgrades_config_set.changed or unattended_upgrades_settings_set.changed
+  when: debian_common_unattended_upgrades_config_set.changed or debian_common_unattended_upgrades_settings_set.changed
 
 - name: Enable unattended-upgrades  # noqa: no-changed-when
   ansible.builtin.shell: |
     set -o pipefail
     echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | debconf-set-selections
-  when: unattended_upgrades_config_set.changed or unattended_upgrades_settings_set.changed
+  when: debian_common_unattended_upgrades_config_set.changed or debian_common_unattended_upgrades_settings_set.changed
   args:
     executable: /usr/bin/bash
