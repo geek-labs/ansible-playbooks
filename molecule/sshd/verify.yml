@@ -20,3 +20,9 @@
       ansible.builtin.command: test -f /etc/ssh/ssh_host_rsa_key
     - name: Ensure hardening ed25519 key
       ansible.builtin.command: test -f /etc/ssh/ssh_host_ed25519_key
+    - name: verify legacy kex
+      ansible.builtin.shell: cat /etc/ssh/sshd_config | grep "KexAlgorithms sntrup761x25519-sha512@openssh.com"
+      when: (ansible_distribution == 'Ubuntu' and (ansible_distribution_version == "22.04" or ansible_distribution_version == "24.04")) or (ansible_distribution == 'Debian' and ansible_distribution_release == "bookworm")
+    - name: verify modern kex
+      ansible.builtin.shell: cat /etc/ssh/sshd_config | grep "KexAlgorithms mlkem768x25519-sha256,sntrup761x25519-sha512@openssh.com"
+      when: (ansible_distribution == 'Ubuntu' and (ansible_distribution_version == "25.04" or ansible_distribution_version == "25.10")) or (ansible_distribution == 'Debian' and ansible_distribution_release == "trixie")

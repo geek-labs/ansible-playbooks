@@ -1,5 +1,15 @@
 ---
 
+- name: Calculate ssh kex
+  ansible.builtin.set_fact:
+    sshd_kex_list: "sntrup761x25519-sha512@openssh.com"
+  when: (ansible_distribution == 'Ubuntu' and (ansible_distribution_version == "22.04" or ansible_distribution_version == "24.04")) or (ansible_distribution == 'Debian' and ansible_distribution_release == "bookworm")
+
+- name: Calculate ssh kex
+  ansible.builtin.set_fact:
+    sshd_kex_list: "mlkem768x25519-sha256,sntrup761x25519-sha512@openssh.com"
+  when: (ansible_distribution == 'Ubuntu' and (ansible_distribution_version == "25.04" or ansible_distribution_version == "25.10")) or (ansible_distribution == 'Debian' and ansible_distribution_release == "trixie")
+
 - name: Apt update
   ansible.builtin.apt:
     update_cache: true
@@ -14,8 +24,8 @@
     daemon_reload: true
 
 - name: SSH server config
-  ansible.builtin.copy:
-    src: files/sshd_config
+  ansible.builtin.template:
+    src: templates/sshd_config.j2
     dest: '/etc/ssh/sshd_config'
     owner: 'root'
     mode: '0644'
