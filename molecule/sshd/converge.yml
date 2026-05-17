@@ -1,5 +1,7 @@
 ---
 - name: Converge
   hosts: all
+  vars:
+    sshd_kex_support_nonpq: false
   roles:
     - role: sshd

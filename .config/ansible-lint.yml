@@ -2,12 +2,19 @@
 # see https://ansible.readthedocs.io/projects/lint/configuring/#ansible-lint-configuration
 profile: null
 
-skip_list:
-  - galaxy[version-incorrect]
-  - galaxy[no-changelog]
-  - galaxy[no-runtime]
-  - schema[galaxy]
-  - yaml[line-length]
-  - yaml[empty-lines]
 exclude_paths:
   - molecule/
+  - .ansible/
+  - .venv/
+  - .github/
+  - "**/files/**"
+  - "**/templates/**"
+  - collections/
+
+skip_list:
+  - yaml[line-length]
+  - galaxy[no-runtime]
+  - galaxy[no-changelog]
+  - galaxy[version-incorrect]
+  - schema[galaxy]
+  - yaml[empty-lines]
