@@ -37,7 +37,7 @@ jobs:
 
       - name: all debian13 based tests
         run: |
-          uv run molecule test --no-parallel --destroy always --all -e ubuntu_common
+          uv run molecule test --no-parallel --destroy always --all -e ubuntu_common -e k3s
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
@@ -45,7 +45,7 @@ jobs:
 
       - name: all ubuntu24 based tests
         run: |
-          uv run molecule test --no-parallel --destroy always --all -e debian_common -e proxmox_install -e proxmox_backup_server
+          uv run molecule test --no-parallel --destroy always --all  -e k3s -e debian_common -e proxmox_install -e proxmox_backup_server
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
