@@ -23,7 +23,7 @@ provisioner:
     links:
       group_vars: ../group_vars/
   env:
-    ANSIBLE_ROLES_PATH: "../../roles:../../.ansible/roles"
+    ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/roles:~/.ansible/roles"
 
 
 verifier:

@@ -13,6 +13,7 @@
     suites: "{{ ansible_distribution_release }}"
     signed_by: "/usr/share/keyrings/debian-archive-keyring.gpg"
     state: present
+    install_python_debian: true
 
 - name: Add update repository
   ansible.builtin.deb822_repository:
@@ -27,6 +28,7 @@
     suites: "{{ ansible_distribution_release }}-updates"
     signed_by: "/usr/share/keyrings/debian-archive-keyring.gpg"
     state: present
+    install_python_debian: true
 
 - name: Add security repository
   ansible.builtin.deb822_repository:
@@ -38,6 +40,7 @@
     suites: "{{ ansible_distribution_release }}-security"
     signed_by: "/usr/share/keyrings/debian-archive-keyring.gpg"
     state: present
+    install_python_debian: true
 
 - name: Override sources.list with blank
   ansible.builtin.copy:

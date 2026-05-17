@@ -1,0 +1,6 @@
+---
+dependency:
+  name: galaxy
+
+verifier:
+  name: ansible

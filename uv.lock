@@ -86,9 +86,7 @@ dependencies = [
     { name = "ansible" },
     { name = "ansible-lint" },
     { name = "molecule" },
-    { name = "molecule-plugins", extra = ["docker", "vagrant"] },
-    { name = "molecule-vagrant" },
-    { name = "python-vagrant" },
+    { name = "molecule-plugins", extra = ["docker"] },
     { name = "yamllint" },
 ]
 
@@ -97,9 +95,7 @@ requires-dist = [
     { name = "ansible", specifier = ">=13.6.0" },
     { name = "ansible-lint", specifier = ">=26.4.0" },
     { name = "molecule", specifier = ">=26.4.0" },
-    { name = "molecule-plugins", extras = ["docker", "vagrant"], specifier = ">=25.8.12" },
-    { name = "molecule-vagrant", specifier = ">=2.0.0" },
-    { name = "python-vagrant", specifier = ">=1.0.0" },
+    { name = "molecule-plugins", extras = ["docker"], specifier = ">=25.8.12" },
     { name = "yamllint", specifier = ">=1.38.0" },
 ]
 
@@ -483,25 +479,6 @@ docker = [
     { name = "requests" },
     { name = "selinux", marker = "sys_platform == 'linux' or sys_platform == 'linux2'" },
 ]
-vagrant = [
-    { name = "python-vagrant" },
-]
-
-[[package]]
-name = "molecule-vagrant"
-version = "2.0.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "jinja2" },
-    { name = "molecule" },
-    { name = "python-vagrant" },
-    { name = "pyyaml" },
-    { name = "selinux" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/c9/ad/0ed60a69cd6887622ff03d67beacbc54183f9d6fa45978c37dc35a315b30/molecule-vagrant-2.0.0.tar.gz", hash = "sha256:bb27f4ec482d0f68231f31136bfba328fc8ef7d81341874284bdd71295e278d5", size = 31901, upload-time = "2023-01-06T21:46:40.36Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/8c/fa/adbb39abc85ec56ab997ff0e39fbc20df9653d6f3a76da5a9e2689cc43b0/molecule_vagrant-2.0.0-py3-none-any.whl", hash = "sha256:2fdd67228cd2926e07d6702e5534480f0ea1319ad1e1eaad0038240a1420039c", size = 33521, upload-time = "2023-01-06T21:46:38.951Z" },
-]
 
 [[package]]
 name = "mypy-extensions"
@@ -564,15 +541,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/c3/b2/bc9c9196916376152d655522fdcebac55e66de6603a76a02bca1b6414f6c/pygments-2.20.0.tar.gz", hash = "sha256:6757cd03768053ff99f3039c1a36d6c0aa0b263438fcab17520b30a303a82b5f", size = 4955991, upload-time = "2026-03-29T13:29:33.898Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f4/7e/a72dd26f3b0f4f2bf1dd8923c85f7ceb43172af56d63c7383eb62b332364/pygments-2.20.0-py3-none-any.whl", hash = "sha256:81a9e26dd42fd28a23a2d169d86d7ac03b46e2f8b59ed4698fb4785f946d0176", size = 1231151, upload-time = "2026-03-29T13:29:30.038Z" },
-]
-
-[[package]]
-name = "python-vagrant"
-version = "1.0.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/2b/3f/2e42a44c9705d72d9925fe8daf00f31bcf82e8b84ec5a752a8a1357c3ef8/python-vagrant-1.0.0.tar.gz", hash = "sha256:a8fe93ccf2ff37ecc95ec2f49ea74a91a6ce73a4db4a16a98dd26d397cfd09e5", size = 36742, upload-time = "2022-03-31T11:38:58.168Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/70/f7/15a056441dcb0b1e7e4730e8e80926a3bd3c79671dc6688323342ff25564/python_vagrant-1.0.0-py3-none-any.whl", hash = "sha256:9f24a29e3f7b17d79c399d0f358d9cc1b76fd5495698c438a39cdae89de467f0", size = 19385, upload-time = "2022-03-31T11:38:56.161Z" },
 ]
 
 [[package]]
@@ -731,7 +699,7 @@ name = "selinux"
 version = "0.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "distro" },
+    { name = "distro", marker = "sys_platform == 'linux' or sys_platform == 'linux2'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/25/07/51acd62e1e15e1172d46f7e32faf138725b147f8c08dbf2d512159d7a310/selinux-0.3.0.tar.gz", hash = "sha256:2a88b337ac46ad0f06f557b2806c3df62421972f766673dd8bf26732fb75a9ea", size = 13479, upload-time = "2022-12-24T16:42:13.163Z" }
 wheels = [

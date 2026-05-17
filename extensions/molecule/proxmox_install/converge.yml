@@ -2,15 +2,16 @@
 - name: Converge
   hosts: all
   vars:
-    proxmox_api_host_access_limit: 10.1.0.0/24
+    proxmox_api_host_access_limit: 10.1.1.0/24
     proxmox_hostname: myproxmox
     #proxmox_terraform_api_key: "very secret"
   pre_tasks:
     - name: Skip config
       ansible.builtin.shell: |
-        mkdir -p /etc/ansible-ansible
+        mkdir -p /etc/ansible-proxmox/
         touch /etc/ansible-proxmox/.ansible_configured
       args:
         creates: /etc/ansible-proxmox/.ansible_configured
   roles:
+    - role: debian_common
     - role: proxmox_install

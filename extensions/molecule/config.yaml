@@ -1,0 +1,3 @@
+provisioner:
+  env:
+    ANSIBLE_ROLES_PATH: "$MOLECULE_PROJECT_DIRECTORY/roles:~/.ansible/roles"

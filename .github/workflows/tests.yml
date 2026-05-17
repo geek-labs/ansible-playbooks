@@ -21,6 +21,7 @@ jobs:
         uses: astral-sh/setup-uv@v8.1.0
         with:
           python-version: 3.14
+
       - name: Install test dependencies.
         run: uv sync --all-extras
 

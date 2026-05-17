@@ -73,6 +73,7 @@
     suites: "{{ ansible_facts['distribution_release'] }}"
     signed_by: "/etc/apt/trusted.gpg.d/proxmox-release-{{ ansible_facts['distribution_release'] }}.gpg"
     state: present
+    install_python_debian: true
 
 - name: Uninstall systemd-timesyncd
   ansible.builtin.apt:
