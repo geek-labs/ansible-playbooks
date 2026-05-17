@@ -5,6 +5,3 @@
     enabled: true
     state: restarted
   listen: 'restart pveproxy service'
-
-
-
