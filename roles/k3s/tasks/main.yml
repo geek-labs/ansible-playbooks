@@ -1,4 +1,8 @@
 ---
+
+- name: Get facts on current container
+  community.docker.current_container_facts:
+
 - name: Apt update
   ansible.builtin.apt:
     update_cache: true
@@ -22,6 +26,12 @@
   ansible.builtin.copy:
     src: files/limits_k8s.conf
     dest: '/etc/security/limits.d/k8s.conf'
+    mode: '0644'
+
+- name: User Limits
+  ansible.builtin.copy:
+    src: files/sysctl_user_limits.conf
+    dest: '/etc/sysctl.d/99_k3s_limits.conf'
     mode: '0644'
 
 - name: Remove multipathd
@@ -122,13 +132,14 @@
     checksum: sha256:955c7085b29594a1310ffc9f2ad35bc566a45ab664ccb042667d2129dbf6a3cd
     mode: '0755'
     force: false
-  # this only works on servers due to the kubeconf
+    # this only works on servers due to the kubeconf
 
 - name: Enable dm_crypt kernel modul for longhorn on agents
   community.general.modprobe:
     name: dm_crypt
     state: present
     persistent: present
+  when: not ansible_module_running_in_container
 
 - name: K3s uninstall tools
   ansible.builtin.copy:
@@ -145,29 +156,33 @@
     mode: '0640'
   when: k3s_docker_registry1_domain is defined
 
-- name: etcdctl wrapper
+- name: Deploy etcdctl wrapper
   ansible.builtin.copy:
     src: files/bin/etcdctl
     dest: '/usr/local/bin/etcdctl'
     mode: '0770'
 
-- name: etcdlogs wrapper
+- name: Deploy etcdlogs wrapper
   ansible.builtin.copy:
     src: files/bin/etcdlogs
     dest: '/usr/local/bin/etcdlogs'
     mode: '0770'
-  # this only works on servers
 
-- name: calicoctl wrapper
+- name: Deploy calicoctl wrapper
   ansible.builtin.copy:
     src: files/bin/calicoctl
     dest: '/usr/local/bin/calicoctl'
     mode: '0770'
-  # this only works on servers due to the kubeconf
 
-- name: kubeapilogs wrapper
+- name: Deploy kubeapilogs wrapper
   ansible.builtin.copy:
     src: files/bin/kubeapilogs
     dest: '/usr/local/bin/kubeapilogs'
     mode: '0770'
-  # this only works on servers
+
+- name: Higher max inotify since container user those up
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_instances
+    value: 512
+    sysctl_set: true
+    sysctl_file: /etc/sysctl.d/fs.inotify.max_user_instances.conf
