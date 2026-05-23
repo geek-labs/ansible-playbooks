@@ -1,14 +1,18 @@
 ---
 
-- name: Calculate ssh kex
+- name: Support non pq kex
   ansible.builtin.set_fact:
-    sshd_kex_list: "sntrup761x25519-sha512@openssh.com"
-  when: (ansible_distribution == 'Ubuntu' and (ansible_distribution_version == "22.04" or ansible_distribution_version == "24.04")) or (ansible_distribution == 'Debian' and ansible_distribution_release == "bookworm")
+    sshd_ssh_kex_non_pq: "{{ ',curve25519-sha256,curve25519-sha256@libssh.org' if sshd_kex_support_nonpq | default(false) else '' }}"
 
 - name: Calculate ssh kex
   ansible.builtin.set_fact:
-    sshd_kex_list: "mlkem768x25519-sha256,sntrup761x25519-sha512@openssh.com"
-  when: (ansible_distribution == 'Ubuntu' and (ansible_distribution_version == "25.04" or ansible_distribution_version == "25.10")) or (ansible_distribution == 'Debian' and ansible_distribution_release == "trixie")
+    sshd_kex_list: "sntrup761x25519-sha512@openssh.com{{ sshd_ssh_kex_non_pq }}"
+  when: (ansible_facts['distribution'] == 'Ubuntu' and (ansible_facts['distribution_version'] == "22.04" or ansible_facts['distribution_version'] == "24.04")) or (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_release'] == "bookworm")
+
+- name: Calculate ssh kex
+  ansible.builtin.set_fact:
+    sshd_kex_list: "mlkem768x25519-sha256,sntrup761x25519-sha512@openssh.com{{ sshd_ssh_kex_non_pq }}"
+  when: (ansible_facts['distribution'] == 'Ubuntu' and (ansible_facts['distribution_version'] == "25.04" or ansible_facts['distribution_version'] == "25.10")) or (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_release'] == "trixie")
 
 - name: Apt update
   ansible.builtin.apt:

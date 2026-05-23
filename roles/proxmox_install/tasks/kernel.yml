@@ -1,0 +1,45 @@
+- name: Check if pinning PVE kernel is required
+  ansible.builtin.shell: |
+    set -o pipefail
+    /usr/sbin/pve-efiboot-tool kernel list | grep 'Pinned kernel' -A1 | grep {{ proxmox_kernel_pin }}
+  args:
+    executable: /usr/bin/bash
+  register: proxmox_kernel_already_pinned
+  failed_when: "proxmox_kernel_already_pinned.rc > 1"  # we only fail if the exit code is not 0 or 1 (even 1 is expected)
+  changed_when: "proxmox_kernel_already_pinned.rc == 1"
+  when: proxmox_kernel_pin | default('') != ''
+  become: yes
+
+- name: Pin PVE kernel
+  ansible.builtin.shell: |
+    set -o pipefail
+    /usr/sbin/pve-efiboot-tool kernel pin {{ proxmox_kernel_pin }}
+    touch /var/run/reboot-required
+  args:
+    executable: /usr/bin/bash
+  when: proxmox_kernel_pin | default('') != '' and proxmox_kernel_already_pinned.rc == 1
+  become: yes
+
+# if kernel pin is not set, but we have a pin, we should remove it
+- name: Check if unpin PVE kernel is required
+  ansible.builtin.shell: |
+    set -o pipefail
+    # if any kernel is pinned
+    /usr/sbin/pve-efiboot-tool kernel list | grep 'Pinned kernel' -A1 | grep pve
+  args:
+    executable: /usr/bin/bash
+  register: proxmox_kernel_should_unpin
+  when: proxmox_kernel_pin | default('') == ''
+  failed_when: "proxmox_kernel_should_unpin.rc > 1"  # we only fail if the exit code is not 0 or 1 (even 1 is expected)
+  changed_when: "proxmox_kernel_should_unpin.rc == 0"
+  become: yes
+
+- name: Unpin PVE kernel
+  ansible.builtin.shell: |
+    set -o pipefail
+    /usr/sbin/pve-efiboot-tool kernel unpin 
+    touch /var/run/reboot-required
+  args:
+    executable: /usr/bin/bash
+  when: proxmox_kernel_pin | default('') == '' and proxmox_kernel_should_unpin.rc == 0
+  become: yes

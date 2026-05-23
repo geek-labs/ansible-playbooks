@@ -1,7 +1,7 @@
 ## Variables
 
 ```yaml
-proxmox_api_host_access_limit: 10.1.0.0/24
+proxmox_api_host_access_limit: 10.1.0.0/16
 proxmox_hostname: myproxmox
 # optional: use this if you want to auto-setup storages. Usually for useful non-lvm setups
 #proxmox_storage: true
@@ -12,5 +12,7 @@ proxmox_hostname: myproxmox
 #proxmox_terraform_ssh_keys: 
 # - 'ssh-rsa secret1 eugen@eugen"
 # - 'ssh-rsa secret2 jan@jan"
+# setting this will pin your PVE kernel to this version - leaving it blank will remove the pin
+#proxmox_kernel_pin: 6.17.13-9-pve
 ```
 

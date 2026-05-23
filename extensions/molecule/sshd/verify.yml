@@ -26,3 +26,6 @@
     - name: verify modern kex
       ansible.builtin.shell: cat /etc/ssh/sshd_config | grep "KexAlgorithms mlkem768x25519-sha256,sntrup761x25519-sha512@openssh.com"
       when: (ansible_distribution == 'Ubuntu' and (ansible_distribution_version == "25.04" or ansible_distribution_version == "25.10")) or (ansible_distribution == 'Debian' and ansible_distribution_release == "trixie")
+    - name: verify non pq kex
+      ansible.builtin.shell: cat /etc/ssh/sshd_config | grep ",curve25519-sha256,curve25519-sha256@libssh.org"
+      when: sshd_kex_support_nonpq | default(false)
