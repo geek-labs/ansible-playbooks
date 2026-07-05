@@ -71,8 +71,8 @@
       --disable traefik \
       --disable local-storage \
       --disable metrics-server" sh -
-  when: k3s_version_already_installed.rc == 1
-  changed_when: "k3s_version_already_installed.rc == 1 or (k3s_install_force | default(false))"
+  #when: k3s_version_already_installed.rc == 1
+  #changed_when: "k3s_version_already_installed.rc == 1 or (k3s_install_force | default(false))"
 
 - name: Allow sudoer access to k3s config
   ansible.builtin.file:
