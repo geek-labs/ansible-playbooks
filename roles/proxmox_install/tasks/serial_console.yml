@@ -1,0 +1,36 @@
+---
+# kernel + login console on a serial port - useful as out-of-band access when the GPU is passed through
+
+- name: Validate serial console device
+  ansible.builtin.assert:
+    that:
+      - proxmox_serial_console_device | default('ttyS0') is match('^ttyS[0-9]+$')
+    fail_msg: "proxmox_serial_console_device must be a serial port like 'ttyS0'"
+
+# proxmox-boot-tool (systemd-boot, e.g. ZFS installs) takes the cmdline from /etc/kernel/cmdline - not supported yet
+- name: Check if boot is managed by proxmox-boot-tool
+  ansible.builtin.stat:
+    path: /etc/kernel/proxmox-boot-uuids
+  register: proxmox_boot_tool_uuids
+
+- name: Fail on proxmox-boot-tool managed hosts
+  ansible.builtin.fail:
+    msg: "Serial console is only supported for plain GRUB boots, this host is managed by proxmox-boot-tool"
+  when: proxmox_boot_tool_uuids.stat.exists
+
+- name: Create grub config folder
+  ansible.builtin.file:
+    path: /etc/default/grub.d
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+
+- name: Configure serial console
+  ansible.builtin.template:
+    src: templates/grub-serial-console.cfg.j2
+    dest: /etc/default/grub.d/serial-console.cfg
+    owner: root
+    group: root
+    mode: '0644'
+  notify: "update grub"

@@ -1,0 +1,32 @@
+---
+# guest side of a GPU passed through to this VM (e.g. for jellyfin hardware transcoding)
+
+- name: Install GPU firmware
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      - linux-firmware
+
+# e.g. Ubuntu -kvm / -virtual kernels ship without the GPU modules
+- name: Check GPU driver is available in the running kernel
+  ansible.builtin.command: modinfo {{ k3s_gpu_driver_module | default('i915') }}
+  register: k3s_gpu_driver_available
+  changed_when: false
+  failed_when: false
+  when: not ansible_module_running_in_container
+
+- name: Fail on missing GPU driver
+  ansible.builtin.fail:
+    msg: >-
+      Kernel module '{{ k3s_gpu_driver_module | default('i915') }}' is not available in the running kernel
+      ({{ ansible_facts['kernel'] }}).
+      Use a generic/HWE kernel (e.g. linux-generic-hwe-24.04) or install linux-modules-extra.
+  when: not ansible_module_running_in_container and k3s_gpu_driver_available.rc != 0
+
+- name: Install GPU verification tools
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg: "{{ k3s_gpu_tools_packages | default(['intel-gpu-tools', 'vainfo']) }}"
+  when: k3s_gpu_tools_install | default(False)

@@ -173,3 +173,9 @@
   ansible.builtin.include_tasks: config.yml
 - name: Include kernel
   ansible.builtin.include_tasks: kernel.yml
+- name: Include PCI passthrough
+  ansible.builtin.include_tasks: pci_passthrough.yml
+  when: proxmox_pci_passthrough_enable | default(False)
+- name: Include serial console
+  ansible.builtin.include_tasks: serial_console.yml
+  when: proxmox_serial_console_enable | default(False)

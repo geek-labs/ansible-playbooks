@@ -1,0 +1,5 @@
+# Managed by ansible (geeklabs.common.proxmox_install)
+# the last console= is /dev/console, systemd spawns a login getty on it
+GRUB_CMDLINE_LINUX="$GRUB_CMDLINE_LINUX console=tty0 console={{ proxmox_serial_console_device | default('ttyS0') }},{{ proxmox_serial_console_baud | default(115200) }}n8"
+GRUB_TERMINAL="console serial"
+GRUB_SERIAL_COMMAND="serial --unit={{ proxmox_serial_console_device | default('ttyS0') | regex_replace('^ttyS', '') }} --speed={{ proxmox_serial_console_baud | default(115200) }}"

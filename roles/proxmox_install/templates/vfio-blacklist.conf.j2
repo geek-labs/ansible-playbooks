@@ -1,0 +1,4 @@
+# Managed by ansible (geeklabs.common.proxmox_install)
+{% for driver in proxmox_pci_passthrough_blacklist_drivers %}
+blacklist {{ driver }}
+{% endfor %}

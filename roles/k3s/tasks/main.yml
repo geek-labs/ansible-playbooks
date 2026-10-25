@@ -186,3 +186,7 @@
     value: 512
     sysctl_set: true
     sysctl_file: /etc/sysctl.d/fs.inotify.max_user_instances.conf
+
+- name: Include GPU
+  ansible.builtin.include_tasks: gpu.yml
+  when: k3s_gpu_enable | default(False)

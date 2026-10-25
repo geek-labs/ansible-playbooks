@@ -5,3 +5,26 @@
     enabled: true
     state: restarted
   listen: 'restart pveproxy service'
+
+- name: Update initramfs
+  ansible.builtin.shell: |
+    set -e
+    update-initramfs -u -k all
+    touch /var/run/reboot-required
+  args:
+    executable: /usr/bin/bash
+  changed_when: true
+  # there is no kernel/initramfs within our test containers
+  when: not ansible_module_running_in_container
+  listen: 'update initramfs'
+
+- name: Update grub
+  ansible.builtin.shell: |
+    set -e
+    update-grub
+    touch /var/run/reboot-required
+  args:
+    executable: /usr/bin/bash
+  changed_when: true
+  when: not ansible_module_running_in_container
+  listen: 'update grub'
