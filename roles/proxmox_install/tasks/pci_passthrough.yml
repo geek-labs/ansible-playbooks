@@ -1,0 +1,45 @@
+---
+# binds the configured PCI devices to vfio-pci on boot, so they can be passed through to a VM
+
+- name: Validate PCI passthrough ids
+  ansible.builtin.assert:
+    that:
+      - proxmox_pci_passthrough_ids | default([]) | length > 0
+      - proxmox_pci_passthrough_ids | reject('match', '^[0-9a-fA-F]{4}:[0-9a-fA-F]{4}$') | list | length == 0
+    fail_msg: "proxmox_pci_passthrough_ids must be a list of vendor:device ids like '8086:46d1' (see lspci -nn)"
+
+- name: Load vfio modules on boot
+  ansible.builtin.copy:
+    src: files/modules-load-vfio.conf
+    dest: /etc/modules-load.d/vfio.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: "update initramfs"
+
+- name: Bind PCI devices to vfio-pci
+  ansible.builtin.template:
+    src: templates/vfio.conf.j2
+    dest: /etc/modprobe.d/vfio.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: "update initramfs"
+
+# optional, some hosts need the GPU driver for console output - so this is empty by default
+- name: Blacklist host drivers of passed through devices
+  ansible.builtin.template:
+    src: templates/vfio-blacklist.conf.j2
+    dest: /etc/modprobe.d/vfio-blacklist.conf
+    owner: root
+    group: root
+    mode: '0644'
+  when: proxmox_pci_passthrough_blacklist_drivers | default([]) | length > 0
+  notify: "update initramfs"
+
+- name: Remove host driver blacklist
+  ansible.builtin.file:
+    path: /etc/modprobe.d/vfio-blacklist.conf
+    state: absent
+  when: proxmox_pci_passthrough_blacklist_drivers | default([]) | length == 0
+  notify: "update initramfs"

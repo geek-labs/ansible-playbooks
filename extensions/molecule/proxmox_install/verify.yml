@@ -14,3 +14,13 @@
       ansible.builtin.shell: test ! -f /etc/apt/sources.list || cat /etc/apt/sources.list | grep -v pve
     #- name: Api user has been created
     #  ansible.builtin.shell: pveum user list | grep terraform-prov@pve
+    - name: vfio modules load on boot
+      ansible.builtin.command: grep -x vfio_pci /etc/modules-load.d/vfio.conf
+    - name: vfio-pci claims the configured device
+      ansible.builtin.command: grep -x 'options vfio-pci ids=8086:46d1' /etc/modprobe.d/vfio.conf
+    - name: vfio-pci is loaded before the host driver
+      ansible.builtin.command: "grep -x 'softdep i915 pre: vfio-pci' /etc/modprobe.d/vfio.conf"
+    - name: host driver is blacklisted
+      ansible.builtin.command: grep -x 'blacklist i915' /etc/modprobe.d/vfio-blacklist.conf
+    - name: serial console configured
+      ansible.builtin.command: grep 'console=ttyS0,115200n8' /etc/default/grub.d/serial-console.cfg

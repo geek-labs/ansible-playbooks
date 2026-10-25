@@ -5,6 +5,10 @@
     proxmox_api_host_access_limit: 10.1.1.0/24
     proxmox_hostname: myproxmox
     #proxmox_terraform_api_key: "very secret"
+    proxmox_pci_passthrough_enable: true
+    proxmox_pci_passthrough_ids: ['8086:46d1']
+    proxmox_pci_passthrough_blacklist_drivers: ['i915']
+    proxmox_serial_console_enable: true
   pre_tasks:
     - name: Skip config
       ansible.builtin.shell: |

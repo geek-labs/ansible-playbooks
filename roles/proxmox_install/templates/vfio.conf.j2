@@ -1,0 +1,6 @@
+# Managed by ansible (geeklabs.common.proxmox_install)
+options vfio-pci ids={{ proxmox_pci_passthrough_ids | join(',') }}
+# ensure vfio-pci claims the devices before the host drivers do
+{% for driver in proxmox_pci_passthrough_softdep_drivers | default(['i915', 'xe']) %}
+softdep {{ driver }} pre: vfio-pci
+{% endfor %}
