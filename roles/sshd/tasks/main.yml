@@ -12,7 +12,7 @@
 - name: Calculate ssh kex
   ansible.builtin.set_fact:
     sshd_kex_list: "mlkem768x25519-sha256,sntrup761x25519-sha512@openssh.com{{ sshd_ssh_kex_non_pq }}"
-  when: (ansible_facts['distribution'] == 'Ubuntu' and (ansible_facts['distribution_version'] == "25.04" or ansible_facts['distribution_version'] == "25.10")) or (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_release'] == "trixie")
+  when: (ansible_facts['distribution'] == 'Ubuntu' and (ansible_facts['distribution_version'] == "25.04" or ansible_facts['distribution_version'] == "25.10" or ansible_facts['distribution_version'] == "26.04")) or (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_release'] == "trixie")
 
 - name: Apt update
   ansible.builtin.apt:

@@ -42,6 +42,21 @@
       multipath-tools
     state: absent
 
+## fix containers not being able to signal their own processes on ubuntu 26.04
+# containerd's apparmor profile doesn't match the stacked //&unconfined peer label, so eg postgres hangs on startup
+# must be set before k3s starts, already running containers only pick this up when recreated (reboot)
+# remove once k3s ships a containerd with the fix, then delete /etc/sysctl.d/99-k3s-apparmor.conf and reboot:
+# https://github.com/containerd/containerd/issues/14485
+# https://github.com/containerd/containerd/pull/14487
+# https://github.com/k3s-io/k3s/issues/13625
+- name: Disable apparmor unconfined restriction
+  ansible.posix.sysctl:
+    name: kernel.apparmor_restrict_unprivileged_unconfined
+    value: 0
+    sysctl_set: true
+    sysctl_file: /etc/sysctl.d/99-k3s-apparmor.conf
+  when: ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_version'] == "26.04"
+
 - name: Check k3s version
   ansible.builtin.shell: |
     set -o pipefail
